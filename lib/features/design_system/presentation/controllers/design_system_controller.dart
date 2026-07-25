@@ -295,7 +295,9 @@ class DesignSystemController extends ChangeNotifier {
       );
       final newVar = ComponentVariation<DropdownStyleSpec>(
         name: variationName,
-        stateStyles: Map<String, DropdownStyleSpec>.from(defaultVar.stateStyles),
+        stateStyles: Map<String, DropdownStyleSpec>.from(
+          defaultVar.stateStyles,
+        ),
       );
       updatedComps[compIndex] = DropdownComponent(
         variations: List.from(comp.variations)..add(newVar),
@@ -307,7 +309,9 @@ class DesignSystemController extends ChangeNotifier {
       );
       final newVar = ComponentVariation<TextInputStyleSpec>(
         name: variationName,
-        stateStyles: Map<String, TextInputStyleSpec>.from(defaultVar.stateStyles),
+        stateStyles: Map<String, TextInputStyleSpec>.from(
+          defaultVar.stateStyles,
+        ),
       );
       updatedComps[compIndex] = TextInputComponent(
         variations: List.from(comp.variations)..add(newVar),
@@ -319,7 +323,9 @@ class DesignSystemController extends ChangeNotifier {
       );
       final newVar = ComponentVariation<TextInputStyleSpec>(
         name: variationName,
-        stateStyles: Map<String, TextInputStyleSpec>.from(defaultVar.stateStyles),
+        stateStyles: Map<String, TextInputStyleSpec>.from(
+          defaultVar.stateStyles,
+        ),
       );
       updatedComps[compIndex] = TextareaComponent(
         variations: List.from(comp.variations)..add(newVar),
@@ -331,7 +337,9 @@ class DesignSystemController extends ChangeNotifier {
       );
       final newVar = ComponentVariation<CheckboxStyleSpec>(
         name: variationName,
-        stateStyles: Map<String, CheckboxStyleSpec>.from(defaultVar.stateStyles),
+        stateStyles: Map<String, CheckboxStyleSpec>.from(
+          defaultVar.stateStyles,
+        ),
       );
       updatedComps[compIndex] = CheckboxComponent(
         variations: List.from(comp.variations)..add(newVar),
@@ -343,7 +351,9 @@ class DesignSystemController extends ChangeNotifier {
       );
       final newVar = ComponentVariation<CheckboxStyleSpec>(
         name: variationName,
-        stateStyles: Map<String, CheckboxStyleSpec>.from(defaultVar.stateStyles),
+        stateStyles: Map<String, CheckboxStyleSpec>.from(
+          defaultVar.stateStyles,
+        ),
       );
       updatedComps[compIndex] = RadioComponent(
         variations: List.from(comp.variations)..add(newVar),
