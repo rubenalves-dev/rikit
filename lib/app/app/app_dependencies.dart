@@ -5,6 +5,7 @@ import 'package:rikit/features/json/application/format_json.dart';
 import 'package:rikit/features/json/domain/json_formatter.dart';
 import 'package:rikit/features/json/domain/json_input_policy.dart';
 import 'package:rikit/features/json/infrastructure/dart_json_formatter.dart';
+import 'package:rikit/features/json/presentation/controllers/json_tool_controller.dart';
 import 'package:rikit/shared/logging/application/application_logger.dart';
 import 'package:rikit/shared/logging/domain/log_repository.dart';
 import 'package:rikit/shared/logging/infrastructure/sqlite_log_repository.dart';
@@ -18,6 +19,7 @@ class AppDependencies {
   final LogRepository logRepository;
   final ApplicationLogger logger;
   final NotificationController notifications;
+  final JsonToolController jsonToolController;
 
   const AppDependencies._({
     required this.jsonFormatter,
@@ -26,6 +28,7 @@ class AppDependencies {
     required this.logRepository,
     required this.logger,
     required this.notifications,
+    required this.jsonToolController,
   });
 
   static Future<AppDependencies> create() async {
@@ -47,21 +50,29 @@ class AppDependencies {
     );
     final logRepository = SqliteLogRepository(database);
     logRepository.cleanUp(now: DateTime.now().toUtc());
+    final notifications = NotificationController();
+    final logger = ApplicationLogger(
+      repository: logRepository,
+      isDevelopment: kDebugMode,
+    );
 
     return AppDependencies._(
       jsonFormatter: jsonFormatter,
       formatJson: formatJson,
       database: database,
       logRepository: logRepository,
-      logger: ApplicationLogger(
-        repository: logRepository,
-        isDevelopment: kDebugMode,
+      logger: logger,
+      notifications: notifications,
+      jsonToolController: JsonToolController(
+        formatJson: formatJson,
+        logger: logger,
+        notifications: notifications,
       ),
-      notifications: NotificationController(),
     );
   }
 
   void dispose() {
+    jsonToolController.dispose();
     notifications.dispose();
     database.dispose();
   }
