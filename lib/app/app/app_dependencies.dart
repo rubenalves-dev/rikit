@@ -8,6 +8,7 @@ import 'package:rikit/features/json/domain/json_formatter.dart';
 import 'package:rikit/features/json/domain/json_input_policy.dart';
 import 'package:rikit/features/json/infrastructure/dart_json_formatter.dart';
 import 'package:rikit/features/json/presentation/controllers/json_tool_controller.dart';
+import 'package:rikit/features/design_system/presentation/controllers/design_system_controller.dart';
 import 'package:rikit/shared/logging/application/application_logger.dart';
 import 'package:rikit/shared/logging/domain/log_repository.dart';
 import 'package:rikit/shared/logging/infrastructure/sqlite_log_repository.dart';
@@ -22,6 +23,7 @@ class AppDependencies {
   final ApplicationLogger logger;
   final NotificationController notifications;
   final JsonToolController jsonToolController;
+  final DesignSystemController designSystemController;
   final ActivityRepository activityRepository;
 
   const AppDependencies._({
@@ -32,6 +34,7 @@ class AppDependencies {
     required this.logger,
     required this.notifications,
     required this.jsonToolController,
+    required this.designSystemController,
     required this.activityRepository,
   });
 
@@ -61,6 +64,7 @@ class AppDependencies {
       repository: logRepository,
       isDevelopment: kDebugMode,
     );
+    final designSystemController = DesignSystemController();
 
     return AppDependencies._(
       jsonFormatter: jsonFormatter,
@@ -70,6 +74,7 @@ class AppDependencies {
       logger: logger,
       notifications: notifications,
       activityRepository: activityRepository,
+      designSystemController: designSystemController,
       jsonToolController: JsonToolController(
         formatJson: formatJson,
         logger: logger,
@@ -81,6 +86,7 @@ class AppDependencies {
 
   void dispose() {
     jsonToolController.dispose();
+    designSystemController.dispose();
     notifications.dispose();
     database.dispose();
   }

@@ -4,6 +4,7 @@ import 'package:rikit/features/design_system/presentation/controllers/design_sys
 import 'package:rikit/features/design_system/presentation/services/system_fonts_service.dart';
 import 'package:rikit/features/design_system/presentation/widgets/button_editor.dart';
 import 'package:rikit/features/design_system/presentation/widgets/color_scheme_editor.dart';
+import 'package:rikit/features/design_system/presentation/widgets/details_editor.dart';
 import 'package:rikit/features/design_system/presentation/widgets/dropdown_editor.dart';
 import 'package:rikit/features/design_system/presentation/widgets/forms_editor.dart';
 import 'package:rikit/features/design_system/presentation/widgets/global_tokens_editor.dart';
@@ -17,45 +18,6 @@ class DesignSystemPage extends StatefulWidget {
 
   @override
   State<DesignSystemPage> createState() => _DesignSystemPageState();
-}
-
-class _JsonPagePlaceholder extends StatelessWidget {
-  const _JsonPagePlaceholder({required this.title});
-  final String title;
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Card(
-        child: Padding(
-          padding: const EdgeInsets.all(32.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Icon(
-                Icons.handyman_rounded,
-                size: 48,
-                color: RikitColors.textMuted,
-              ),
-              const SizedBox(height: 16),
-              Text(
-                '$title Editor',
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
-                ),
-              ),
-              const SizedBox(height: 8),
-              const Text(
-                'Interactive preview and state overrides are coming in the next module.',
-                style: TextStyle(color: RikitColors.textMuted, fontSize: 13),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
 }
 
 class _DesignSystemPageState extends State<DesignSystemPage> {
@@ -161,7 +123,7 @@ class _DesignSystemPageState extends State<DesignSystemPage> {
                         ButtonEditor(controller: widget.controller),
                         DropdownEditor(controller: widget.controller),
                         FormsEditor(controller: widget.controller),
-                        const _JsonPagePlaceholder(title: 'Details & Finish'),
+                        DetailsEditor(controller: widget.controller),
                       ],
                     ),
                   ),

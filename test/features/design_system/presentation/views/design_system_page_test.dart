@@ -119,5 +119,12 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Text Input Styling'), findsOneWidget);
+
+    // Tap Details & Finish Tab
+    await tester.tap(find.text('Details & Finish'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Design System Metadata'), findsOneWidget);
+    expect(find.text('Output Snippet Preview'), findsOneWidget);
   });
 }

@@ -3,6 +3,7 @@ import 'package:rikit/app/app/app_dependencies.dart';
 import 'package:rikit/app/router/app_routes.dart';
 import 'package:rikit/features/home/presentation/views/home_page.dart';
 import 'package:rikit/features/json/presentation/views/json_tool_page.dart';
+import 'package:rikit/features/design_system/presentation/views/design_system_page.dart';
 import 'package:rikit/shared/logging/presentation/log_settings_page.dart';
 import 'package:rikit/shared/logging/presentation/logs_page.dart';
 import 'package:rikit/shared/presentation/app_shell.dart';
@@ -28,6 +29,14 @@ GoRouter createAppRouter(AppDependencies dependencies) {
             path: AppRoutes.jsonFormatter,
             pageBuilder: (context, state) => NoTransitionPage(
               child: JsonToolPage(controller: dependencies.jsonToolController),
+            ),
+          ),
+          GoRoute(
+            path: AppRoutes.designSystem,
+            pageBuilder: (context, state) => NoTransitionPage(
+              child: DesignSystemPage(
+                controller: dependencies.designSystemController,
+              ),
             ),
           ),
           GoRoute(
