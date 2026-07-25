@@ -20,6 +20,8 @@ abstract final class RikitTheme {
     final colorScheme = const ColorScheme.dark(
       primary: RikitColors.primary,
       onPrimary: Colors.white,
+      secondary: RikitColors.primary,
+      onSecondary: Colors.white,
       surface: RikitColors.surface,
       onSurface: RikitColors.text,
       error: RikitColors.primary,

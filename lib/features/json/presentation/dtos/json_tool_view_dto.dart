@@ -11,6 +11,7 @@ final class JsonToolViewDto {
     required this.normalizeStrings,
     required this.inputBytes,
     required this.outputBytes,
+    this.sourceName,
     this.message,
     this.errorOffset,
   });
@@ -24,6 +25,7 @@ final class JsonToolViewDto {
   final bool normalizeStrings;
   final int inputBytes;
   final int outputBytes;
+  final String? sourceName;
   final String? message;
   final int? errorOffset;
 
@@ -55,6 +57,7 @@ final class JsonToolViewDto {
     bool? normalizeStrings,
     int? inputBytes,
     int? outputBytes,
+    String? sourceName,
     String? message,
     int? errorOffset,
     bool clearFeedback = false,
@@ -69,6 +72,7 @@ final class JsonToolViewDto {
       normalizeStrings: normalizeStrings ?? this.normalizeStrings,
       inputBytes: inputBytes ?? this.inputBytes,
       outputBytes: outputBytes ?? this.outputBytes,
+      sourceName: sourceName ?? this.sourceName,
       message: clearFeedback ? null : message ?? this.message,
       errorOffset: clearFeedback ? null : errorOffset ?? this.errorOffset,
     );

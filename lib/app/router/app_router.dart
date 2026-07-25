@@ -26,7 +26,7 @@ GoRouter createAppRouter(AppDependencies dependencies) {
           GoRoute(
             path: AppRoutes.jsonFormatter,
             pageBuilder: (context, state) => NoTransitionPage(
-              child: JsonToolPage(formatJson: dependencies.formatJson),
+              child: JsonToolPage(controller: dependencies.jsonToolController),
             ),
           ),
           GoRoute(

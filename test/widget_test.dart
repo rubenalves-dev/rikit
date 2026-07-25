@@ -19,6 +19,7 @@ void main() {
     await tester.tap(find.byKey(const ValueKey('nav-JSON Formatter')));
     await tester.pumpAndSettle();
 
-    expect(find.text('Formatter workspace is next'), findsOneWidget);
+    expect(find.byKey(const ValueKey('json-input')), findsOneWidget);
+    expect(find.text('Formatted JSON appears here'), findsOneWidget);
   });
 }
