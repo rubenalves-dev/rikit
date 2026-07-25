@@ -16,19 +16,31 @@ final class NotificationController extends ChangeNotifier {
   List<NotificationMessage> get messages => List.unmodifiable(_messages);
   bool get expanded => _expanded;
 
-  void show({
+  int show({
     required LogSeverity severity,
     required String title,
     required String body,
+    NotificationAction? action,
+    String? actionLabel,
   }) {
     final message = NotificationMessage(
       id: _nextId++,
       severity: severity,
       title: title,
       body: body,
+      action: action,
+      actionLabel: actionLabel,
     );
     _messages.insert(0, message);
     _schedule(message.id);
+    notifyListeners();
+    return message.id;
+  }
+
+  void clearAction(int id) {
+    final index = _messages.indexWhere((message) => message.id == id);
+    if (index < 0 || _messages[index].action == null) return;
+    _messages[index] = _messages[index].copyWith(clearAction: true);
     notifyListeners();
   }
 

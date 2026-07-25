@@ -12,7 +12,6 @@ void main() {
     final controller = NotificationController(
       dismissAfter: const Duration(minutes: 1),
     );
-    addTearDown(controller.dispose);
     for (var index = 0; index < 3; index++) {
       controller.show(
         severity: LogSeverity.error,
@@ -88,6 +87,40 @@ void main() {
     expect(find.text('Copied'), findsOneWidget);
     await tester.pump(const Duration(seconds: 1));
     expect(find.text('Copied'), findsNothing);
+  });
+
+  testWidgets('actionable card shows a chevron and invokes its action', (
+    tester,
+  ) async {
+    var activations = 0;
+    final controller = NotificationController(
+      dismissAfter: const Duration(minutes: 1),
+    );
+    final id = controller.show(
+      severity: LogSeverity.error,
+      title: 'Invalid JSON',
+      body: 'Check line 10, column 4.',
+      action: () => activations++,
+      actionLabel: 'Go to JSON error',
+    );
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: RikitTheme.dark(),
+        home: Scaffold(body: NotificationOverlay(controller: controller)),
+      ),
+    );
+
+    expect(find.byKey(const ValueKey('notification-action-icon')), findsOne);
+    await tester.tap(find.byKey(ValueKey('notification-$id')));
+    expect(activations, 1);
+
+    controller.clearAction(id);
+    await tester.pump();
+    expect(
+      find.byKey(const ValueKey('notification-action-icon')),
+      findsNothing,
+    );
+    controller.dispose();
   });
 
   testWidgets('matches the expanded notification stack golden', (tester) async {

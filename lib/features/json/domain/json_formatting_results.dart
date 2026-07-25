@@ -17,8 +17,13 @@ final class JsonFormattingSucceeded extends JsonFormattingResult {
 final class JsonFormattingFailed extends JsonFormattingResult {
   final String message;
   final int? offset;
+  final int length;
 
-  const JsonFormattingFailed({required this.message, this.offset});
+  const JsonFormattingFailed({
+    required this.message,
+    this.offset,
+    this.length = 0,
+  });
 }
 
 final class JsonInputRejected extends JsonFormattingResult {

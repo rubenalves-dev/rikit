@@ -14,6 +14,7 @@ final class JsonToolViewDto {
     this.sourceName,
     this.message,
     this.errorOffset,
+    this.errorLength = 0,
   });
 
   final String input;
@@ -28,6 +29,7 @@ final class JsonToolViewDto {
   final String? sourceName;
   final String? message;
   final int? errorOffset;
+  final int errorLength;
 
   bool get isWorking => status == JsonToolViewStatus.working;
   bool get canSubmit => input.trim().isNotEmpty && !isWorking;
@@ -60,6 +62,7 @@ final class JsonToolViewDto {
     String? sourceName,
     String? message,
     int? errorOffset,
+    int? errorLength,
     bool clearFeedback = false,
   }) {
     return JsonToolViewDto(
@@ -75,6 +78,7 @@ final class JsonToolViewDto {
       sourceName: sourceName ?? this.sourceName,
       message: clearFeedback ? null : message ?? this.message,
       errorOffset: clearFeedback ? null : errorOffset ?? this.errorOffset,
+      errorLength: clearFeedback ? 0 : errorLength ?? this.errorLength,
     );
   }
 }

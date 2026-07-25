@@ -34,8 +34,12 @@ class JsonToolController extends ChangeNotifier {
 
   JsonToolViewDto _view = JsonToolViewDto.initial();
   JsonToolViewDto get view => _view;
+  int _diagnosticNavigationRequest = 0;
+  int get diagnosticNavigationRequest => _diagnosticNavigationRequest;
+  int? _diagnosticNotificationId;
 
   void updateInput(String input) {
+    _invalidateDiagnosticAction();
     _view = _view.copyWith(
       input: input,
       output: '',
@@ -69,7 +73,11 @@ class JsonToolController extends ChangeNotifier {
 
   void format() {
     if (!_view.canSubmit) return;
-    _view = _view.copyWith(status: JsonToolViewStatus.working);
+    _invalidateDiagnosticAction();
+    _view = _view.copyWith(
+      status: JsonToolViewStatus.working,
+      clearFeedback: true,
+    );
     notifyListeners();
     final result = formatJson(
       input: _view.input,
@@ -89,6 +97,7 @@ class JsonToolController extends ChangeNotifier {
 
   void useOutputAsInput() {
     if (!_view.hasOutput) return;
+    _invalidateDiagnosticAction();
     _view = _view.copyWith(
       input: _view.output,
       output: '',
@@ -108,6 +117,7 @@ class JsonToolController extends ChangeNotifier {
   Future<void> _applyFileResult(JsonFileLoadResult result) async {
     switch (result) {
       case JsonFileLoaded(:final content, :final name):
+        _invalidateDiagnosticAction();
         _view = _view.copyWith(
           input: content,
           output: '',
@@ -162,6 +172,36 @@ class JsonToolController extends ChangeNotifier {
     );
   }
 
+  void clearDiagnostic() {
+    if (_view.errorOffset == null && _diagnosticNotificationId == null) return;
+    _invalidateDiagnosticAction();
+    _view = _view.copyWith(clearFeedback: true);
+    notifyListeners();
+  }
+
+  void deactivateEditor() {
+    final id = _diagnosticNotificationId;
+    _diagnosticNotificationId = null;
+    _view = _view.copyWith(clearFeedback: true);
+    if (id != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        notifications.clearAction(id);
+      });
+    }
+  }
+
+  void _requestDiagnosticNavigation() {
+    if (_view.errorOffset == null) return;
+    _diagnosticNavigationRequest++;
+    notifyListeners();
+  }
+
+  void _invalidateDiagnosticAction() {
+    final id = _diagnosticNotificationId;
+    if (id != null) notifications.clearAction(id);
+    _diagnosticNotificationId = null;
+  }
+
   void _recordResult(JsonFormattingResult result) {
     switch (result) {
       case JsonFormattingSucceeded(:final inputBytes, :final outputBytes):
@@ -193,11 +233,28 @@ class JsonToolController extends ChangeNotifier {
             : location == null
             ? 'The input is not valid JSON.'
             : 'Check line ${location.$1}, column ${location.$2}.';
-        notifications.show(
-          severity: LogSeverity.error,
-          title: 'Invalid JSON',
-          body: body,
-        );
+        if (location == null) {
+          notifications.show(
+            severity: LogSeverity.error,
+            title: 'Invalid JSON',
+            body: body,
+          );
+        } else {
+          late final int notificationId;
+          notificationId = notifications.show(
+            severity: LogSeverity.error,
+            title: 'Invalid JSON',
+            body: body,
+            action: () {
+              if (_diagnosticNotificationId == notificationId) {
+                _requestDiagnosticNavigation();
+              }
+            },
+            actionLabel: 'Go to JSON error',
+          );
+          _diagnosticNotificationId = notificationId;
+          _requestDiagnosticNavigation();
+        }
         logger.record(
           severity: LogSeverity.error,
           tool: 'JSON Formatter',

@@ -142,6 +142,22 @@ void main() {
       expect(result.message, isNotEmpty);
     });
 
+    test('locates the complete second duplicate key as the error range', () {
+      final result = format('{"same": 1, "same": 2}');
+
+      expect(result, isA<JsonFormattingFailed>());
+      final failure = result as JsonFormattingFailed;
+      expect(failure.offset, 12);
+      expect(failure.length, 6);
+      expect(
+        '{"same": 1, "same": 2}'.substring(
+          failure.offset!,
+          failure.offset! + failure.length,
+        ),
+        '"same"',
+      );
+    });
+
     test('rejects formatted output beyond the byte limit', () {
       final result = format(
         '1e1000',

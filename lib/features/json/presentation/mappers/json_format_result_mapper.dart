@@ -26,19 +26,21 @@ class JsonFormatResultMapper {
           outputBytes: outputBytes,
         ),
 
-      JsonFormattingFailed(:final message, :final offset) => JsonToolViewDto(
-        input: currentView.input,
-        output: '',
-        status: JsonToolViewStatus.failed,
-        indentSpaces: currentView.indentSpaces,
-        sortObjectKeys: currentView.sortObjectKeys,
-        normalizeNumbers: currentView.normalizeNumbers,
-        normalizeStrings: currentView.normalizeStrings,
-        inputBytes: currentView.inputBytes,
-        outputBytes: 0,
-        message: message,
-        errorOffset: offset,
-      ),
+      JsonFormattingFailed(:final message, :final offset, :final length) =>
+        JsonToolViewDto(
+          input: currentView.input,
+          output: '',
+          status: JsonToolViewStatus.failed,
+          indentSpaces: currentView.indentSpaces,
+          sortObjectKeys: currentView.sortObjectKeys,
+          normalizeNumbers: currentView.normalizeNumbers,
+          normalizeStrings: currentView.normalizeStrings,
+          inputBytes: currentView.inputBytes,
+          outputBytes: 0,
+          message: message,
+          errorOffset: offset,
+          errorLength: length,
+        ),
 
       JsonInputRejected(:final reason) => JsonToolViewDto(
         input: currentView.input,

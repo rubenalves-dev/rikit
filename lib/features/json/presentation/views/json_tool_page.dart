@@ -2,8 +2,10 @@ import 'package:desktop_drop/desktop_drop.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:rikit/features/json/presentation/controllers/json_tool_controller.dart';
+import 'package:rikit/features/json/presentation/widgets/json_code_editor.dart';
 import 'package:rikit/shared/presentation/page_header.dart';
 import 'package:rikit/shared/presentation/rikit_theme.dart';
+import 'package:rikit/shared/presentation/shortcut_label.dart';
 
 class JsonToolPage extends StatefulWidget {
   const JsonToolPage({required this.controller, super.key});
@@ -15,19 +17,28 @@ class JsonToolPage extends StatefulWidget {
 
 class _JsonToolPageState extends State<JsonToolPage> {
   late final TextEditingController inputController;
+  late final TextEditingController outputController;
+  final editorController = JsonCodeEditorController();
+  late int diagnosticNavigationRequest;
   bool dragging = false;
 
   @override
   void initState() {
     super.initState();
     inputController = TextEditingController(text: widget.controller.view.input);
+    outputController = TextEditingController(
+      text: widget.controller.view.output,
+    );
+    diagnosticNavigationRequest = widget.controller.diagnosticNavigationRequest;
     widget.controller.addListener(_synchronizeInput);
   }
 
   @override
   void dispose() {
     widget.controller.removeListener(_synchronizeInput);
+    widget.controller.deactivateEditor();
     inputController.dispose();
+    outputController.dispose();
     super.dispose();
   }
 
@@ -38,6 +49,24 @@ class _JsonToolPageState extends State<JsonToolPage> {
         text: input,
         selection: TextSelection.collapsed(offset: input.length),
       );
+    }
+    final output = widget.controller.view.output;
+    if (outputController.text != output) {
+      outputController.value = TextEditingValue(text: output);
+    }
+    final request = widget.controller.diagnosticNavigationRequest;
+    if (request != diagnosticNavigationRequest) {
+      diagnosticNavigationRequest = request;
+      final view = widget.controller.view;
+      if (view.errorOffset != null) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (!mounted) return;
+          editorController.revealDiagnostic(
+            offset: view.errorOffset!,
+            length: view.errorLength,
+          );
+        });
+      }
     }
   }
 
@@ -106,24 +135,13 @@ class _JsonToolPageState extends State<JsonToolPage> {
                               child: Stack(
                                 fit: StackFit.expand,
                                 children: [
-                                  TextField(
-                                    key: const ValueKey('json-input'),
-                                    controller: inputController,
+                                  JsonCodeEditor(
+                                    textController: inputController,
+                                    editorController: editorController,
                                     onChanged: widget.controller.updateInput,
-                                    expands: true,
-                                    minLines: null,
-                                    maxLines: null,
-                                    textAlignVertical: TextAlignVertical.top,
-                                    style: _codeStyle,
-                                    decoration: const InputDecoration(
-                                      hintText:
-                                          'Paste JSON, type here, or drop a .json file…',
-                                      border: InputBorder.none,
-                                      enabledBorder: InputBorder.none,
-                                      focusedBorder: InputBorder.none,
-                                      filled: false,
-                                      contentPadding: EdgeInsets.all(18),
-                                    ),
+                                    diagnosticOffset: view.errorOffset,
+                                    hintText:
+                                        'Paste JSON, type here, or drop a .json file…',
                                   ),
                                   if (dragging) const _DropOverlay(),
                                 ],
@@ -161,16 +179,11 @@ class _JsonToolPageState extends State<JsonToolPage> {
                                 onPressed: widget.controller.useOutputAsInput,
                               ),
                             ],
-                            child: view.hasOutput
-                                ? SingleChildScrollView(
-                                    padding: const EdgeInsets.all(18),
-                                    child: SelectableText(
-                                      view.output,
-                                      key: const ValueKey('json-output'),
-                                      style: _codeStyle,
-                                    ),
-                                  )
-                                : const _EmptyOutput(),
+                            child: JsonCodeEditor(
+                              textController: outputController,
+                              readOnly: true,
+                              hintText: 'Formatted JSON appears here',
+                            ),
                           );
                           return stacked
                               ? Column(
@@ -213,13 +226,6 @@ class _JsonToolPageState extends State<JsonToolPage> {
   }
 }
 
-const _codeStyle = TextStyle(
-  color: RikitColors.text,
-  fontFamily: 'monospace',
-  fontSize: 13,
-  height: 1.55,
-);
-
 class _PrimaryButton extends StatelessWidget {
   const _PrimaryButton({required this.enabled, required this.onPressed});
   final bool enabled;
@@ -230,12 +236,12 @@ class _PrimaryButton extends StatelessWidget {
     key: const ValueKey('format-json'),
     onPressed: enabled ? onPressed : null,
     icon: const Icon(Icons.auto_fix_high_rounded, size: 17),
-    label: const Row(
+    label: Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text('Format JSON'),
-        SizedBox(width: 10),
-        Text('⌘↵', style: TextStyle(fontSize: 11, color: Colors.white70)),
+        const Text('Format JSON'),
+        const SizedBox(width: 10),
+        ShortcutLabel.format(key: const ValueKey('format-shortcut')),
       ],
     ),
   );
@@ -401,29 +407,6 @@ class _DropOverlay extends StatelessWidget {
         border: Border.all(color: RikitColors.primary),
       ),
       child: const Text('Drop one .json file'),
-    ),
-  );
-}
-
-class _EmptyOutput extends StatelessWidget {
-  const _EmptyOutput();
-
-  @override
-  Widget build(BuildContext context) => Center(
-    child: Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        const Icon(
-          Icons.arrow_outward_rounded,
-          size: 25,
-          color: RikitColors.textMuted,
-        ),
-        const SizedBox(height: 9),
-        Text(
-          'Formatted JSON appears here',
-          style: Theme.of(context).textTheme.bodyMedium,
-        ),
-      ],
     ),
   );
 }
