@@ -18,3 +18,5 @@ flutter test
 ```
 
 Commit updated PNG files only when the visual change is intentional and has been inspected. CI runs the golden suite on Ubuntu; macOS and Windows jobs compile the native desktop applications without regenerating snapshots.
+
+The test harness permits at most a 2.5% pixel difference to absorb Skia rasterization differences between macOS development machines and Ubuntu CI. Structural widget tests still assert layout and behavior independently, and larger visual changes fail with Flutter's normal diff artifacts.
