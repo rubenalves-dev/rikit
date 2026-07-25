@@ -17,19 +17,19 @@ class ShadowValue {
   });
 
   const ShadowValue.none()
-      : color = const ColorToken.static('#00000000'),
-        offsetX = 0.0,
-        offsetY = 0.0,
-        blurRadius = 0.0,
-        spreadRadius = 0.0;
+    : color = const ColorToken.static('#00000000'),
+      offsetX = 0.0,
+      offsetY = 0.0,
+      blurRadius = 0.0,
+      spreadRadius = 0.0;
 
   Map<String, dynamic> toJson() => {
-        'color': color.toJson(),
-        'offsetX': offsetX,
-        'offsetY': offsetY,
-        'blurRadius': blurRadius,
-        'spreadRadius': spreadRadius,
-      };
+    'color': color.toJson(),
+    'offsetX': offsetX,
+    'offsetY': offsetY,
+    'blurRadius': blurRadius,
+    'spreadRadius': spreadRadius,
+  };
 
   factory ShadowValue.fromJson(Map<String, dynamic> json) {
     return ShadowValue(
@@ -89,7 +89,7 @@ class GlobalTokens {
   final List<ScaleToken<Dimension>> borderRadiusScale;
   final List<ScaleToken<Dimension>> spacingScale;
   final List<ScaleToken<ShadowValue>> shadowsScale;
-  
+
   // Nominated keys for default fallback references
   final String defaultBorderRadiusKey;
   final String defaultSpacingKey;
@@ -105,32 +105,44 @@ class GlobalTokens {
   });
 
   Map<String, dynamic> toJson() => {
-        'borderRadiusScale': borderRadiusScale
-            .map((e) => {'key': e.key, 'value': e.value.toJson()})
-            .toList(),
-        'spacingScale': spacingScale
-            .map((e) => {'key': e.key, 'value': e.value.toJson()})
-            .toList(),
-        'shadowsScale': shadowsScale
-            .map((e) => {'key': e.key, 'value': e.value.toJson()})
-            .toList(),
-        'defaultBorderRadiusKey': defaultBorderRadiusKey,
-        'defaultSpacingKey': defaultSpacingKey,
-        'defaultShadowKey': defaultShadowKey,
-      };
+    'borderRadiusScale': borderRadiusScale
+        .map((e) => {'key': e.key, 'value': e.value.toJson()})
+        .toList(),
+    'spacingScale': spacingScale
+        .map((e) => {'key': e.key, 'value': e.value.toJson()})
+        .toList(),
+    'shadowsScale': shadowsScale
+        .map((e) => {'key': e.key, 'value': e.value.toJson()})
+        .toList(),
+    'defaultBorderRadiusKey': defaultBorderRadiusKey,
+    'defaultSpacingKey': defaultSpacingKey,
+    'defaultShadowKey': defaultShadowKey,
+  };
 
   factory GlobalTokens.fromJson(Map<String, dynamic> json) {
     final brList = (json['borderRadiusScale'] as List)
-        .map((e) => ScaleToken(
-            e['key'] as String, Dimension.fromJson(e['value'] as Map<String, dynamic>)))
+        .map(
+          (e) => ScaleToken(
+            e['key'] as String,
+            Dimension.fromJson(e['value'] as Map<String, dynamic>),
+          ),
+        )
         .toList();
     final spList = (json['spacingScale'] as List)
-        .map((e) => ScaleToken(
-            e['key'] as String, Dimension.fromJson(e['value'] as Map<String, dynamic>)))
+        .map(
+          (e) => ScaleToken(
+            e['key'] as String,
+            Dimension.fromJson(e['value'] as Map<String, dynamic>),
+          ),
+        )
         .toList();
     final sdList = (json['shadowsScale'] as List)
-        .map((e) => ScaleToken(
-            e['key'] as String, ShadowValue.fromJson(e['value'] as Map<String, dynamic>)))
+        .map(
+          (e) => ScaleToken(
+            e['key'] as String,
+            ShadowValue.fromJson(e['value'] as Map<String, dynamic>),
+          ),
+        )
         .toList();
 
     return GlobalTokens(
@@ -155,7 +167,8 @@ class GlobalTokens {
       borderRadiusScale: borderRadiusScale ?? this.borderRadiusScale,
       spacingScale: spacingScale ?? this.spacingScale,
       shadowsScale: shadowsScale ?? this.shadowsScale,
-      defaultBorderRadiusKey: defaultBorderRadiusKey ?? this.defaultBorderRadiusKey,
+      defaultBorderRadiusKey:
+          defaultBorderRadiusKey ?? this.defaultBorderRadiusKey,
       defaultSpacingKey: defaultSpacingKey ?? this.defaultSpacingKey,
       defaultShadowKey: defaultShadowKey ?? this.defaultShadowKey,
     );

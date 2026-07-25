@@ -3,7 +3,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:rikit/features/design_system/domain/dimension.dart';
 import 'package:rikit/features/design_system/domain/color_token.dart';
 import 'package:rikit/features/design_system/domain/color_row.dart';
-import 'package:rikit/features/design_system/domain/typography_settings.dart';
 import 'package:rikit/features/design_system/domain/component_models.dart';
 
 void main() {
@@ -108,7 +107,9 @@ void main() {
         name: 'Default',
         stateStyles: {
           'idle': btnStyle,
-          'hovered': btnStyle.copyWith(backgroundColor: const ColorToken.theme('primary-600')),
+          'hovered': btnStyle.copyWith(
+            backgroundColor: const ColorToken.theme('primary-600'),
+          ),
         },
       );
 
@@ -121,8 +122,14 @@ void main() {
       final parsed = parseDesignComponent(json) as ButtonComponent;
       expect(parsed.name, 'Button');
       expect(parsed.variations[0].name, 'Default');
-      expect(parsed.variations[0].stateStyles['hovered']!.textTransform, 'uppercase');
-      expect(parsed.variations[0].stateStyles['hovered']!.backgroundColor.value, 'primary-600');
+      expect(
+        parsed.variations[0].stateStyles['hovered']!.textTransform,
+        'uppercase',
+      );
+      expect(
+        parsed.variations[0].stateStyles['hovered']!.backgroundColor.value,
+        'primary-600',
+      );
     });
   });
 }

@@ -57,14 +57,13 @@ class Dimension {
       }
       return value.toString();
     }
-    final formattedValue = value == value.roundToDouble() ? value.round().toString() : value.toString();
+    final formattedValue = value == value.roundToDouble()
+        ? value.round().toString()
+        : value.toString();
     return '$formattedValue${unit.label}';
   }
 
-  Map<String, dynamic> toJson() => {
-        'value': value,
-        'unit': unit.name,
-      };
+  Map<String, dynamic> toJson() => {'value': value, 'unit': unit.name};
 
   factory Dimension.fromJson(Map<String, dynamic> json) {
     return Dimension(

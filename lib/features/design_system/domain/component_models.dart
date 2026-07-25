@@ -8,17 +8,12 @@ abstract class ComponentStyleSpec {
 
 class ComponentVariation<T extends ComponentStyleSpec> {
   final String name;
-  final Map<String, T> stateStyles; // maps state key (e.g. 'idle', 'hovered') to specific style
+  final Map<String, T>
+  stateStyles; // maps state key (e.g. 'idle', 'hovered') to specific style
 
-  ComponentVariation({
-    required this.name,
-    required this.stateStyles,
-  });
+  ComponentVariation({required this.name, required this.stateStyles});
 
-  ComponentVariation<T> copyWith({
-    String? name,
-    Map<String, T>? stateStyles,
-  }) {
+  ComponentVariation<T> copyWith({String? name, Map<String, T>? stateStyles}) {
     return ComponentVariation<T>(
       name: name ?? this.name,
       stateStyles: stateStyles ?? Map<String, T>.from(this.stateStyles),
@@ -26,9 +21,9 @@ class ComponentVariation<T extends ComponentStyleSpec> {
   }
 
   Map<String, dynamic> toJson() => {
-        'name': name,
-        'stateStyles': stateStyles.map((key, val) => MapEntry(key, val.toJson())),
-      };
+    'name': name,
+    'stateStyles': stateStyles.map((key, val) => MapEntry(key, val.toJson())),
+  };
 }
 
 abstract class DesignComponent {
@@ -92,27 +87,41 @@ class ButtonStyleSpec implements ComponentStyleSpec {
 
   @override
   Map<String, dynamic> toJson() => {
-        'paddingHorizontal': paddingHorizontal.toJson(),
-        'paddingVertical': paddingVertical.toJson(),
-        'backgroundColor': backgroundColor.toJson(),
-        'foregroundColor': foregroundColor.toJson(),
-        'borderColor': borderColor.toJson(),
-        'borderWidth': borderWidth.toJson(),
-        'borderRadius': borderRadius.toJson(),
-        'fontSize': fontSize.toJson(),
-        'textTransform': textTransform,
-        'gap': gap.toJson(),
-      };
+    'paddingHorizontal': paddingHorizontal.toJson(),
+    'paddingVertical': paddingVertical.toJson(),
+    'backgroundColor': backgroundColor.toJson(),
+    'foregroundColor': foregroundColor.toJson(),
+    'borderColor': borderColor.toJson(),
+    'borderWidth': borderWidth.toJson(),
+    'borderRadius': borderRadius.toJson(),
+    'fontSize': fontSize.toJson(),
+    'textTransform': textTransform,
+    'gap': gap.toJson(),
+  };
 
   factory ButtonStyleSpec.fromJson(Map<String, dynamic> json) {
     return ButtonStyleSpec(
-      paddingHorizontal: Dimension.fromJson(json['paddingHorizontal'] as Map<String, dynamic>),
-      paddingVertical: Dimension.fromJson(json['paddingVertical'] as Map<String, dynamic>),
-      backgroundColor: ColorToken.fromJson(json['backgroundColor'] as Map<String, dynamic>),
-      foregroundColor: ColorToken.fromJson(json['foregroundColor'] as Map<String, dynamic>),
-      borderColor: ColorToken.fromJson(json['borderColor'] as Map<String, dynamic>),
-      borderWidth: Dimension.fromJson(json['borderWidth'] as Map<String, dynamic>),
-      borderRadius: Dimension.fromJson(json['borderRadius'] as Map<String, dynamic>),
+      paddingHorizontal: Dimension.fromJson(
+        json['paddingHorizontal'] as Map<String, dynamic>,
+      ),
+      paddingVertical: Dimension.fromJson(
+        json['paddingVertical'] as Map<String, dynamic>,
+      ),
+      backgroundColor: ColorToken.fromJson(
+        json['backgroundColor'] as Map<String, dynamic>,
+      ),
+      foregroundColor: ColorToken.fromJson(
+        json['foregroundColor'] as Map<String, dynamic>,
+      ),
+      borderColor: ColorToken.fromJson(
+        json['borderColor'] as Map<String, dynamic>,
+      ),
+      borderWidth: Dimension.fromJson(
+        json['borderWidth'] as Map<String, dynamic>,
+      ),
+      borderRadius: Dimension.fromJson(
+        json['borderRadius'] as Map<String, dynamic>,
+      ),
       fontSize: Dimension.fromJson(json['fontSize'] as Map<String, dynamic>),
       textTransform: json['textTransform'] as String? ?? 'none',
       gap: Dimension.fromJson(json['gap'] as Map<String, dynamic>),
@@ -130,18 +139,23 @@ class ButtonComponent extends DesignComponent {
 
   @override
   Map<String, dynamic> toJson() => {
-        'name': name,
-        'variations': variations.map((v) => v.toJson()).toList(),
-      };
+    'name': name,
+    'variations': variations.map((v) => v.toJson()).toList(),
+  };
 
   factory ButtonComponent.fromJson(Map<String, dynamic> json) {
     final list = (json['variations'] as List)
-        .map((v) => ComponentVariation<ButtonStyleSpec>(
-              name: v['name'] as String,
-              stateStyles: (v['stateStyles'] as Map<String, dynamic>).map(
-                (k, val) => MapEntry(k, ButtonStyleSpec.fromJson(val as Map<String, dynamic>)),
+        .map(
+          (v) => ComponentVariation<ButtonStyleSpec>(
+            name: v['name'] as String,
+            stateStyles: (v['stateStyles'] as Map<String, dynamic>).map(
+              (k, val) => MapEntry(
+                k,
+                ButtonStyleSpec.fromJson(val as Map<String, dynamic>),
               ),
-            ))
+            ),
+          ),
+        )
         .toList();
     return ButtonComponent(variations: list);
   }
@@ -188,7 +202,8 @@ class DropdownStyleSpec implements ComponentStyleSpec {
       menuBorder: menuBorder ?? this.menuBorder,
       menuBorderRadius: menuBorderRadius ?? this.menuBorderRadius,
       menuPadding: menuPadding ?? this.menuPadding,
-      itemPaddingHorizontal: itemPaddingHorizontal ?? this.itemPaddingHorizontal,
+      itemPaddingHorizontal:
+          itemPaddingHorizontal ?? this.itemPaddingHorizontal,
       itemPaddingVertical: itemPaddingVertical ?? this.itemPaddingVertical,
       itemHoverBackground: itemHoverBackground ?? this.itemHoverBackground,
       itemHoverForeground: itemHoverForeground ?? this.itemHoverForeground,
@@ -197,28 +212,46 @@ class DropdownStyleSpec implements ComponentStyleSpec {
 
   @override
   Map<String, dynamic> toJson() => {
-        'triggerButton': triggerButton.toJson(),
-        'menuBackground': menuBackground.toJson(),
-        'menuBorder': menuBorder.toJson(),
-        'menuBorderRadius': menuBorderRadius.toJson(),
-        'menuPadding': menuPadding.toJson(),
-        'itemPaddingHorizontal': itemPaddingHorizontal.toJson(),
-        'itemPaddingVertical': itemPaddingVertical.toJson(),
-        'itemHoverBackground': itemHoverBackground.toJson(),
-        'itemHoverForeground': itemHoverForeground.toJson(),
-      };
+    'triggerButton': triggerButton.toJson(),
+    'menuBackground': menuBackground.toJson(),
+    'menuBorder': menuBorder.toJson(),
+    'menuBorderRadius': menuBorderRadius.toJson(),
+    'menuPadding': menuPadding.toJson(),
+    'itemPaddingHorizontal': itemPaddingHorizontal.toJson(),
+    'itemPaddingVertical': itemPaddingVertical.toJson(),
+    'itemHoverBackground': itemHoverBackground.toJson(),
+    'itemHoverForeground': itemHoverForeground.toJson(),
+  };
 
   factory DropdownStyleSpec.fromJson(Map<String, dynamic> json) {
     return DropdownStyleSpec(
-      triggerButton: ButtonStyleSpec.fromJson(json['triggerButton'] as Map<String, dynamic>),
-      menuBackground: ColorToken.fromJson(json['menuBackground'] as Map<String, dynamic>),
-      menuBorder: ColorToken.fromJson(json['menuBorder'] as Map<String, dynamic>),
-      menuBorderRadius: Dimension.fromJson(json['menuBorderRadius'] as Map<String, dynamic>),
-      menuPadding: Dimension.fromJson(json['menuPadding'] as Map<String, dynamic>),
-      itemPaddingHorizontal: Dimension.fromJson(json['itemPaddingHorizontal'] as Map<String, dynamic>),
-      itemPaddingVertical: Dimension.fromJson(json['itemPaddingVertical'] as Map<String, dynamic>),
-      itemHoverBackground: ColorToken.fromJson(json['itemHoverBackground'] as Map<String, dynamic>),
-      itemHoverForeground: ColorToken.fromJson(json['itemHoverForeground'] as Map<String, dynamic>),
+      triggerButton: ButtonStyleSpec.fromJson(
+        json['triggerButton'] as Map<String, dynamic>,
+      ),
+      menuBackground: ColorToken.fromJson(
+        json['menuBackground'] as Map<String, dynamic>,
+      ),
+      menuBorder: ColorToken.fromJson(
+        json['menuBorder'] as Map<String, dynamic>,
+      ),
+      menuBorderRadius: Dimension.fromJson(
+        json['menuBorderRadius'] as Map<String, dynamic>,
+      ),
+      menuPadding: Dimension.fromJson(
+        json['menuPadding'] as Map<String, dynamic>,
+      ),
+      itemPaddingHorizontal: Dimension.fromJson(
+        json['itemPaddingHorizontal'] as Map<String, dynamic>,
+      ),
+      itemPaddingVertical: Dimension.fromJson(
+        json['itemPaddingVertical'] as Map<String, dynamic>,
+      ),
+      itemHoverBackground: ColorToken.fromJson(
+        json['itemHoverBackground'] as Map<String, dynamic>,
+      ),
+      itemHoverForeground: ColorToken.fromJson(
+        json['itemHoverForeground'] as Map<String, dynamic>,
+      ),
     );
   }
 }
@@ -233,18 +266,23 @@ class DropdownComponent extends DesignComponent {
 
   @override
   Map<String, dynamic> toJson() => {
-        'name': name,
-        'variations': variations.map((v) => v.toJson()).toList(),
-      };
+    'name': name,
+    'variations': variations.map((v) => v.toJson()).toList(),
+  };
 
   factory DropdownComponent.fromJson(Map<String, dynamic> json) {
     final list = (json['variations'] as List)
-        .map((v) => ComponentVariation<DropdownStyleSpec>(
-              name: v['name'] as String,
-              stateStyles: (v['stateStyles'] as Map<String, dynamic>).map(
-                (k, val) => MapEntry(k, DropdownStyleSpec.fromJson(val as Map<String, dynamic>)),
+        .map(
+          (v) => ComponentVariation<DropdownStyleSpec>(
+            name: v['name'] as String,
+            stateStyles: (v['stateStyles'] as Map<String, dynamic>).map(
+              (k, val) => MapEntry(
+                k,
+                DropdownStyleSpec.fromJson(val as Map<String, dynamic>),
               ),
-            ))
+            ),
+          ),
+        )
         .toList();
     return DropdownComponent(variations: list);
   }
@@ -300,28 +338,44 @@ class TextInputStyleSpec implements ComponentStyleSpec {
 
   @override
   Map<String, dynamic> toJson() => {
-        'backgroundColor': backgroundColor.toJson(),
-        'foregroundColor': foregroundColor.toJson(),
-        'borderColor': borderColor.toJson(),
-        'borderWidth': borderWidth.toJson(),
-        'borderRadius': borderRadius.toJson(),
-        'paddingHorizontal': paddingHorizontal.toJson(),
-        'paddingVertical': paddingVertical.toJson(),
-        'fontSize': fontSize.toJson(),
-        'placeholderColor': placeholderColor.toJson(),
-      };
+    'backgroundColor': backgroundColor.toJson(),
+    'foregroundColor': foregroundColor.toJson(),
+    'borderColor': borderColor.toJson(),
+    'borderWidth': borderWidth.toJson(),
+    'borderRadius': borderRadius.toJson(),
+    'paddingHorizontal': paddingHorizontal.toJson(),
+    'paddingVertical': paddingVertical.toJson(),
+    'fontSize': fontSize.toJson(),
+    'placeholderColor': placeholderColor.toJson(),
+  };
 
   factory TextInputStyleSpec.fromJson(Map<String, dynamic> json) {
     return TextInputStyleSpec(
-      backgroundColor: ColorToken.fromJson(json['backgroundColor'] as Map<String, dynamic>),
-      foregroundColor: ColorToken.fromJson(json['foregroundColor'] as Map<String, dynamic>),
-      borderColor: ColorToken.fromJson(json['borderColor'] as Map<String, dynamic>),
-      borderWidth: Dimension.fromJson(json['borderWidth'] as Map<String, dynamic>),
-      borderRadius: Dimension.fromJson(json['borderRadius'] as Map<String, dynamic>),
-      paddingHorizontal: Dimension.fromJson(json['paddingHorizontal'] as Map<String, dynamic>),
-      paddingVertical: Dimension.fromJson(json['paddingVertical'] as Map<String, dynamic>),
+      backgroundColor: ColorToken.fromJson(
+        json['backgroundColor'] as Map<String, dynamic>,
+      ),
+      foregroundColor: ColorToken.fromJson(
+        json['foregroundColor'] as Map<String, dynamic>,
+      ),
+      borderColor: ColorToken.fromJson(
+        json['borderColor'] as Map<String, dynamic>,
+      ),
+      borderWidth: Dimension.fromJson(
+        json['borderWidth'] as Map<String, dynamic>,
+      ),
+      borderRadius: Dimension.fromJson(
+        json['borderRadius'] as Map<String, dynamic>,
+      ),
+      paddingHorizontal: Dimension.fromJson(
+        json['paddingHorizontal'] as Map<String, dynamic>,
+      ),
+      paddingVertical: Dimension.fromJson(
+        json['paddingVertical'] as Map<String, dynamic>,
+      ),
       fontSize: Dimension.fromJson(json['fontSize'] as Map<String, dynamic>),
-      placeholderColor: ColorToken.fromJson(json['placeholderColor'] as Map<String, dynamic>),
+      placeholderColor: ColorToken.fromJson(
+        json['placeholderColor'] as Map<String, dynamic>,
+      ),
     );
   }
 }
@@ -336,18 +390,23 @@ class TextInputComponent extends DesignComponent {
 
   @override
   Map<String, dynamic> toJson() => {
-        'name': name,
-        'variations': variations.map((v) => v.toJson()).toList(),
-      };
+    'name': name,
+    'variations': variations.map((v) => v.toJson()).toList(),
+  };
 
   factory TextInputComponent.fromJson(Map<String, dynamic> json) {
     final list = (json['variations'] as List)
-        .map((v) => ComponentVariation<TextInputStyleSpec>(
-              name: v['name'] as String,
-              stateStyles: (v['stateStyles'] as Map<String, dynamic>).map(
-                (k, val) => MapEntry(k, TextInputStyleSpec.fromJson(val as Map<String, dynamic>)),
+        .map(
+          (v) => ComponentVariation<TextInputStyleSpec>(
+            name: v['name'] as String,
+            stateStyles: (v['stateStyles'] as Map<String, dynamic>).map(
+              (k, val) => MapEntry(
+                k,
+                TextInputStyleSpec.fromJson(val as Map<String, dynamic>),
               ),
-            ))
+            ),
+          ),
+        )
         .toList();
     return TextInputComponent(variations: list);
   }
@@ -364,18 +423,23 @@ class TextareaComponent extends DesignComponent {
 
   @override
   Map<String, dynamic> toJson() => {
-        'name': name,
-        'variations': variations.map((v) => v.toJson()).toList(),
-      };
+    'name': name,
+    'variations': variations.map((v) => v.toJson()).toList(),
+  };
 
   factory TextareaComponent.fromJson(Map<String, dynamic> json) {
     final list = (json['variations'] as List)
-        .map((v) => ComponentVariation<TextInputStyleSpec>(
-              name: v['name'] as String,
-              stateStyles: (v['stateStyles'] as Map<String, dynamic>).map(
-                (k, val) => MapEntry(k, TextInputStyleSpec.fromJson(val as Map<String, dynamic>)),
+        .map(
+          (v) => ComponentVariation<TextInputStyleSpec>(
+            name: v['name'] as String,
+            stateStyles: (v['stateStyles'] as Map<String, dynamic>).map(
+              (k, val) => MapEntry(
+                k,
+                TextInputStyleSpec.fromJson(val as Map<String, dynamic>),
               ),
-            ))
+            ),
+          ),
+        )
         .toList();
     return TextareaComponent(variations: list);
   }
@@ -414,8 +478,10 @@ class CheckboxStyleSpec implements ComponentStyleSpec {
       size: size ?? this.size,
       borderWidth: borderWidth ?? this.borderWidth,
       borderColor: borderColor ?? this.borderColor,
-      backgroundColorUnchecked: backgroundColorUnchecked ?? this.backgroundColorUnchecked,
-      backgroundColorChecked: backgroundColorChecked ?? this.backgroundColorChecked,
+      backgroundColorUnchecked:
+          backgroundColorUnchecked ?? this.backgroundColorUnchecked,
+      backgroundColorChecked:
+          backgroundColorChecked ?? this.backgroundColorChecked,
       indicatorColor: indicatorColor ?? this.indicatorColor,
       borderRadius: borderRadius ?? this.borderRadius,
     );
@@ -423,24 +489,36 @@ class CheckboxStyleSpec implements ComponentStyleSpec {
 
   @override
   Map<String, dynamic> toJson() => {
-        'size': size.toJson(),
-        'borderWidth': borderWidth.toJson(),
-        'borderColor': borderColor.toJson(),
-        'backgroundColorUnchecked': backgroundColorUnchecked.toJson(),
-        'backgroundColorChecked': backgroundColorChecked.toJson(),
-        'indicatorColor': indicatorColor.toJson(),
-        'borderRadius': borderRadius.toJson(),
-      };
+    'size': size.toJson(),
+    'borderWidth': borderWidth.toJson(),
+    'borderColor': borderColor.toJson(),
+    'backgroundColorUnchecked': backgroundColorUnchecked.toJson(),
+    'backgroundColorChecked': backgroundColorChecked.toJson(),
+    'indicatorColor': indicatorColor.toJson(),
+    'borderRadius': borderRadius.toJson(),
+  };
 
   factory CheckboxStyleSpec.fromJson(Map<String, dynamic> json) {
     return CheckboxStyleSpec(
       size: Dimension.fromJson(json['size'] as Map<String, dynamic>),
-      borderWidth: Dimension.fromJson(json['borderWidth'] as Map<String, dynamic>),
-      borderColor: ColorToken.fromJson(json['borderColor'] as Map<String, dynamic>),
-      backgroundColorUnchecked: ColorToken.fromJson(json['backgroundColorUnchecked'] as Map<String, dynamic>),
-      backgroundColorChecked: ColorToken.fromJson(json['backgroundColorChecked'] as Map<String, dynamic>),
-      indicatorColor: ColorToken.fromJson(json['indicatorColor'] as Map<String, dynamic>),
-      borderRadius: Dimension.fromJson(json['borderRadius'] as Map<String, dynamic>),
+      borderWidth: Dimension.fromJson(
+        json['borderWidth'] as Map<String, dynamic>,
+      ),
+      borderColor: ColorToken.fromJson(
+        json['borderColor'] as Map<String, dynamic>,
+      ),
+      backgroundColorUnchecked: ColorToken.fromJson(
+        json['backgroundColorUnchecked'] as Map<String, dynamic>,
+      ),
+      backgroundColorChecked: ColorToken.fromJson(
+        json['backgroundColorChecked'] as Map<String, dynamic>,
+      ),
+      indicatorColor: ColorToken.fromJson(
+        json['indicatorColor'] as Map<String, dynamic>,
+      ),
+      borderRadius: Dimension.fromJson(
+        json['borderRadius'] as Map<String, dynamic>,
+      ),
     );
   }
 }
@@ -455,18 +533,23 @@ class CheckboxComponent extends DesignComponent {
 
   @override
   Map<String, dynamic> toJson() => {
-        'name': name,
-        'variations': variations.map((v) => v.toJson()).toList(),
-      };
+    'name': name,
+    'variations': variations.map((v) => v.toJson()).toList(),
+  };
 
   factory CheckboxComponent.fromJson(Map<String, dynamic> json) {
     final list = (json['variations'] as List)
-        .map((v) => ComponentVariation<CheckboxStyleSpec>(
-              name: v['name'] as String,
-              stateStyles: (v['stateStyles'] as Map<String, dynamic>).map(
-                (k, val) => MapEntry(k, CheckboxStyleSpec.fromJson(val as Map<String, dynamic>)),
+        .map(
+          (v) => ComponentVariation<CheckboxStyleSpec>(
+            name: v['name'] as String,
+            stateStyles: (v['stateStyles'] as Map<String, dynamic>).map(
+              (k, val) => MapEntry(
+                k,
+                CheckboxStyleSpec.fromJson(val as Map<String, dynamic>),
               ),
-            ))
+            ),
+          ),
+        )
         .toList();
     return CheckboxComponent(variations: list);
   }
@@ -482,18 +565,23 @@ class RadioComponent extends DesignComponent {
 
   @override
   Map<String, dynamic> toJson() => {
-        'name': name,
-        'variations': variations.map((v) => v.toJson()).toList(),
-      };
+    'name': name,
+    'variations': variations.map((v) => v.toJson()).toList(),
+  };
 
   factory RadioComponent.fromJson(Map<String, dynamic> json) {
     final list = (json['variations'] as List)
-        .map((v) => ComponentVariation<CheckboxStyleSpec>(
-              name: v['name'] as String,
-              stateStyles: (v['stateStyles'] as Map<String, dynamic>).map(
-                (k, val) => MapEntry(k, CheckboxStyleSpec.fromJson(val as Map<String, dynamic>)),
+        .map(
+          (v) => ComponentVariation<CheckboxStyleSpec>(
+            name: v['name'] as String,
+            stateStyles: (v['stateStyles'] as Map<String, dynamic>).map(
+              (k, val) => MapEntry(
+                k,
+                CheckboxStyleSpec.fromJson(val as Map<String, dynamic>),
               ),
-            ))
+            ),
+          ),
+        )
         .toList();
     return RadioComponent(variations: list);
   }
@@ -533,20 +621,28 @@ class SliderStyleSpec implements ComponentStyleSpec {
 
   @override
   Map<String, dynamic> toJson() => {
-        'trackHeight': trackHeight.toJson(),
-        'trackColorInactive': trackColorInactive.toJson(),
-        'trackColorActive': trackColorActive.toJson(),
-        'thumbSize': thumbSize.toJson(),
-        'thumbColor': thumbColor.toJson(),
-      };
+    'trackHeight': trackHeight.toJson(),
+    'trackColorInactive': trackColorInactive.toJson(),
+    'trackColorActive': trackColorActive.toJson(),
+    'thumbSize': thumbSize.toJson(),
+    'thumbColor': thumbColor.toJson(),
+  };
 
   factory SliderStyleSpec.fromJson(Map<String, dynamic> json) {
     return SliderStyleSpec(
-      trackHeight: Dimension.fromJson(json['trackHeight'] as Map<String, dynamic>),
-      trackColorInactive: ColorToken.fromJson(json['trackColorInactive'] as Map<String, dynamic>),
-      trackColorActive: ColorToken.fromJson(json['trackColorActive'] as Map<String, dynamic>),
+      trackHeight: Dimension.fromJson(
+        json['trackHeight'] as Map<String, dynamic>,
+      ),
+      trackColorInactive: ColorToken.fromJson(
+        json['trackColorInactive'] as Map<String, dynamic>,
+      ),
+      trackColorActive: ColorToken.fromJson(
+        json['trackColorActive'] as Map<String, dynamic>,
+      ),
       thumbSize: Dimension.fromJson(json['thumbSize'] as Map<String, dynamic>),
-      thumbColor: ColorToken.fromJson(json['thumbColor'] as Map<String, dynamic>),
+      thumbColor: ColorToken.fromJson(
+        json['thumbColor'] as Map<String, dynamic>,
+      ),
     );
   }
 }
@@ -561,18 +657,23 @@ class SliderComponent extends DesignComponent {
 
   @override
   Map<String, dynamic> toJson() => {
-        'name': name,
-        'variations': variations.map((v) => v.toJson()).toList(),
-      };
+    'name': name,
+    'variations': variations.map((v) => v.toJson()).toList(),
+  };
 
   factory SliderComponent.fromJson(Map<String, dynamic> json) {
     final list = (json['variations'] as List)
-        .map((v) => ComponentVariation<SliderStyleSpec>(
-              name: v['name'] as String,
-              stateStyles: (v['stateStyles'] as Map<String, dynamic>).map(
-                (k, val) => MapEntry(k, SliderStyleSpec.fromJson(val as Map<String, dynamic>)),
+        .map(
+          (v) => ComponentVariation<SliderStyleSpec>(
+            name: v['name'] as String,
+            stateStyles: (v['stateStyles'] as Map<String, dynamic>).map(
+              (k, val) => MapEntry(
+                k,
+                SliderStyleSpec.fromJson(val as Map<String, dynamic>),
               ),
-            ))
+            ),
+          ),
+        )
         .toList();
     return SliderComponent(variations: list);
   }
@@ -616,21 +717,27 @@ class ToggleStyleSpec implements ComponentStyleSpec {
 
   @override
   Map<String, dynamic> toJson() => {
-        'width': width.toJson(),
-        'height': height.toJson(),
-        'trackColorOff': trackColorOff.toJson(),
-        'trackColorOn': trackColorOn.toJson(),
-        'thumbColor': thumbColor.toJson(),
-        'thumbSize': thumbSize.toJson(),
-      };
+    'width': width.toJson(),
+    'height': height.toJson(),
+    'trackColorOff': trackColorOff.toJson(),
+    'trackColorOn': trackColorOn.toJson(),
+    'thumbColor': thumbColor.toJson(),
+    'thumbSize': thumbSize.toJson(),
+  };
 
   factory ToggleStyleSpec.fromJson(Map<String, dynamic> json) {
     return ToggleStyleSpec(
       width: Dimension.fromJson(json['width'] as Map<String, dynamic>),
       height: Dimension.fromJson(json['height'] as Map<String, dynamic>),
-      trackColorOff: ColorToken.fromJson(json['trackColorOff'] as Map<String, dynamic>),
-      trackColorOn: ColorToken.fromJson(json['trackColorOn'] as Map<String, dynamic>),
-      thumbColor: ColorToken.fromJson(json['thumbColor'] as Map<String, dynamic>),
+      trackColorOff: ColorToken.fromJson(
+        json['trackColorOff'] as Map<String, dynamic>,
+      ),
+      trackColorOn: ColorToken.fromJson(
+        json['trackColorOn'] as Map<String, dynamic>,
+      ),
+      thumbColor: ColorToken.fromJson(
+        json['thumbColor'] as Map<String, dynamic>,
+      ),
       thumbSize: Dimension.fromJson(json['thumbSize'] as Map<String, dynamic>),
     );
   }
@@ -646,18 +753,23 @@ class ToggleComponent extends DesignComponent {
 
   @override
   Map<String, dynamic> toJson() => {
-        'name': name,
-        'variations': variations.map((v) => v.toJson()).toList(),
-      };
+    'name': name,
+    'variations': variations.map((v) => v.toJson()).toList(),
+  };
 
   factory ToggleComponent.fromJson(Map<String, dynamic> json) {
     final list = (json['variations'] as List)
-        .map((v) => ComponentVariation<ToggleStyleSpec>(
-              name: v['name'] as String,
-              stateStyles: (v['stateStyles'] as Map<String, dynamic>).map(
-                (k, val) => MapEntry(k, ToggleStyleSpec.fromJson(val as Map<String, dynamic>)),
+        .map(
+          (v) => ComponentVariation<ToggleStyleSpec>(
+            name: v['name'] as String,
+            stateStyles: (v['stateStyles'] as Map<String, dynamic>).map(
+              (k, val) => MapEntry(
+                k,
+                ToggleStyleSpec.fromJson(val as Map<String, dynamic>),
               ),
-            ))
+            ),
+          ),
+        )
         .toList();
     return ToggleComponent(variations: list);
   }

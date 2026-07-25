@@ -81,10 +81,7 @@ class ColorRow {
     return luminance > 0.179 ? Colors.black : Colors.white;
   }
 
-  ColorRow copyWith({
-    String? name,
-    Color? baseColor,
-  }) {
+  ColorRow copyWith({String? name, Color? baseColor}) {
     if (baseColor != null) {
       return ColorRow.create(
         name: name ?? this.name,
@@ -102,10 +99,10 @@ class ColorRow {
   }
 
   Map<String, dynamic> toJson() => {
-        'name': name,
-        'baseColor': colorToHex(baseColor),
-        'isRemovable': isRemovable,
-      };
+    'name': name,
+    'baseColor': colorToHex(baseColor),
+    'isRemovable': isRemovable,
+  };
 
   factory ColorRow.fromJson(Map<String, dynamic> json) {
     final base = hexToColor(json['baseColor'] as String);

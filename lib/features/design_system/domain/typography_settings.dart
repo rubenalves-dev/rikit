@@ -24,16 +24,18 @@ class TextStyleSpec {
   }
 
   Map<String, dynamic> toJson() => {
-        'fontFamily': fontFamily,
-        'fontSize': fontSize.toJson(),
-        'letterSpacing': letterSpacing.toJson(),
-      };
+    'fontFamily': fontFamily,
+    'fontSize': fontSize.toJson(),
+    'letterSpacing': letterSpacing.toJson(),
+  };
 
   factory TextStyleSpec.fromJson(Map<String, dynamic> json) {
     return TextStyleSpec(
       fontFamily: json['fontFamily'] as String,
       fontSize: Dimension.fromJson(json['fontSize'] as Map<String, dynamic>),
-      letterSpacing: Dimension.fromJson(json['letterSpacing'] as Map<String, dynamic>),
+      letterSpacing: Dimension.fromJson(
+        json['letterSpacing'] as Map<String, dynamic>,
+      ),
     );
   }
 
@@ -80,27 +82,35 @@ class TypographySettings {
   });
 
   Map<String, dynamic> toJson() => {
-        'h1': h1.toJson(),
-        'h2': h2.toJson(),
-        'h3': h3.toJson(),
-        'bodyNormal': bodyNormal.toJson(),
-        'bodySmall': bodySmall.toJson(),
-        'infoNormal': infoNormal.toJson(),
-        'infoSmall': infoSmall.toJson(),
-        'groupHeadings': groupHeadings,
-        'groupBodies': groupBodies,
-        'groupInfos': groupInfos,
-      };
+    'h1': h1.toJson(),
+    'h2': h2.toJson(),
+    'h3': h3.toJson(),
+    'bodyNormal': bodyNormal.toJson(),
+    'bodySmall': bodySmall.toJson(),
+    'infoNormal': infoNormal.toJson(),
+    'infoSmall': infoSmall.toJson(),
+    'groupHeadings': groupHeadings,
+    'groupBodies': groupBodies,
+    'groupInfos': groupInfos,
+  };
 
   factory TypographySettings.fromJson(Map<String, dynamic> json) {
     return TypographySettings(
       h1: TextStyleSpec.fromJson(json['h1'] as Map<String, dynamic>),
       h2: TextStyleSpec.fromJson(json['h2'] as Map<String, dynamic>),
       h3: TextStyleSpec.fromJson(json['h3'] as Map<String, dynamic>),
-      bodyNormal: TextStyleSpec.fromJson(json['bodyNormal'] as Map<String, dynamic>),
-      bodySmall: TextStyleSpec.fromJson(json['bodySmall'] as Map<String, dynamic>),
-      infoNormal: TextStyleSpec.fromJson(json['infoNormal'] as Map<String, dynamic>),
-      infoSmall: TextStyleSpec.fromJson(json['infoSmall'] as Map<String, dynamic>),
+      bodyNormal: TextStyleSpec.fromJson(
+        json['bodyNormal'] as Map<String, dynamic>,
+      ),
+      bodySmall: TextStyleSpec.fromJson(
+        json['bodySmall'] as Map<String, dynamic>,
+      ),
+      infoNormal: TextStyleSpec.fromJson(
+        json['infoNormal'] as Map<String, dynamic>,
+      ),
+      infoSmall: TextStyleSpec.fromJson(
+        json['infoSmall'] as Map<String, dynamic>,
+      ),
       groupHeadings: json['groupHeadings'] as bool? ?? true,
       groupBodies: json['groupBodies'] as bool? ?? true,
       groupInfos: json['groupInfos'] as bool? ?? true,

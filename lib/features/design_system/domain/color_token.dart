@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
 
 String colorToHex(Color color) {
-  final a = color.alpha.toRadixString(16).padLeft(2, '0');
-  final r = color.red.toRadixString(16).padLeft(2, '0');
-  final g = color.green.toRadixString(16).padLeft(2, '0');
-  final b = color.blue.toRadixString(16).padLeft(2, '0');
+  final aVal = (color.a * 255).round().clamp(0, 255);
+  final rVal = (color.r * 255).round().clamp(0, 255);
+  final gVal = (color.g * 255).round().clamp(0, 255);
+  final bVal = (color.b * 255).round().clamp(0, 255);
+
+  final a = aVal.toRadixString(16).padLeft(2, '0');
+  final r = rVal.toRadixString(16).padLeft(2, '0');
+  final g = gVal.toRadixString(16).padLeft(2, '0');
+  final b = bVal.toRadixString(16).padLeft(2, '0');
+
   // Return #RRGGBB by default (drop alpha if 255)
-  if (color.alpha == 255) {
-    return '#${r}$g$b'.toUpperCase();
+  if (aVal == 255) {
+    return '#$r$g$b'.toUpperCase();
   }
   return '#$a$r$g$b'.toUpperCase();
 }
@@ -44,10 +50,7 @@ class ColorToken {
     return hexToColor(value);
   }
 
-  Map<String, dynamic> toJson() => {
-        'type': type,
-        'value': value,
-      };
+  Map<String, dynamic> toJson() => {'type': type, 'value': value};
 
   factory ColorToken.fromJson(Map<String, dynamic> json) {
     if (json['type'] == 'theme') {
