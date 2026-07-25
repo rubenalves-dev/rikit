@@ -20,7 +20,6 @@ class DesignSystemPage extends StatefulWidget {
   State<DesignSystemPage> createState() => _DesignSystemPageState();
 }
 
-
 class _DesignSystemPageState extends State<DesignSystemPage> {
   List<String> systemFonts = [];
   bool loadingFonts = true;
