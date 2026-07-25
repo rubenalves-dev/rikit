@@ -21,6 +21,15 @@ void main() {
     expect(controller.view.output, '{\n  "value": 1.0\n}');
     expect(controller.view.normalizeStrings, isTrue);
     expect(dependencies.notifications.messages, isEmpty);
+    expect(
+      dependencies.activityRepository
+          .summary(
+            from: DateTime.now().toUtc().subtract(const Duration(days: 1)),
+            through: DateTime.now().toUtc(),
+          )
+          .successes,
+      1,
+    );
   });
 
   test('applies indentation, sorting, and normalization options', () {

@@ -1,7 +1,10 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
+import 'package:rikit/features/activity/domain/activity_models.dart';
+import 'package:rikit/features/activity/domain/activity_repository.dart';
 import 'package:rikit/features/json/application/format_json.dart';
 import 'package:rikit/features/json/domain/json_formatting_options.dart';
 import 'package:rikit/features/json/domain/json_formatting_results.dart';
@@ -17,6 +20,7 @@ class JsonToolController extends ChangeNotifier {
     required this.formatJson,
     required this.logger,
     required this.notifications,
+    required this.activityRepository,
     this.mapper = const JsonFormatResultMapper(),
     this.fileService = const JsonFileService(),
   });
@@ -24,6 +28,7 @@ class JsonToolController extends ChangeNotifier {
   final FormatJson formatJson;
   final ApplicationLogger logger;
   final NotificationController notifications;
+  final ActivityRepository activityRepository;
   final JsonFormatResultMapper mapper;
   final JsonFileService fileService;
 
@@ -159,7 +164,14 @@ class JsonToolController extends ChangeNotifier {
 
   void _recordResult(JsonFormattingResult result) {
     switch (result) {
-      case JsonFormattingSucceeded():
+      case JsonFormattingSucceeded(:final inputBytes, :final outputBytes):
+        activityRepository.record(
+          timestamp: DateTime.now().toUtc(),
+          tool: 'JSON Formatter',
+          outcome: ToolRunOutcome.succeeded,
+          inputBytes: inputBytes,
+          outputBytes: outputBytes,
+        );
         logger.record(
           severity: LogSeverity.information,
           tool: 'JSON Formatter',
@@ -167,6 +179,13 @@ class JsonToolController extends ChangeNotifier {
           message: 'JSON formatting completed successfully.',
         );
       case JsonFormattingFailed(:final message, :final offset):
+        activityRepository.record(
+          timestamp: DateTime.now().toUtc(),
+          tool: 'JSON Formatter',
+          outcome: ToolRunOutcome.validationFailed,
+          inputBytes: utf8.encode(_view.input).length,
+          outputBytes: 0,
+        );
         final location = _lineAndColumn(_view.input, offset);
         final body = message.startsWith('Duplicate object key')
             ? '${message.replaceFirst(RegExp(r'\.$'), '')}'
@@ -187,13 +206,27 @@ class JsonToolController extends ChangeNotifier {
               ? 'JSON validation failed.'
               : 'JSON validation failed at line ${location.$1}, column ${location.$2}.',
         );
-      case JsonInputRejected(:final reason):
+      case JsonInputRejected(:final reason, :final actualBytes):
+        activityRepository.record(
+          timestamp: DateTime.now().toUtc(),
+          tool: 'JSON Formatter',
+          outcome: ToolRunOutcome.policyRejected,
+          inputBytes: actualBytes,
+          outputBytes: 0,
+        );
         notifications.show(
           severity: LogSeverity.error,
           title: 'Input rejected',
           body: reason,
         );
       case JsonOutputRejected(:final reason):
+        activityRepository.record(
+          timestamp: DateTime.now().toUtc(),
+          tool: 'JSON Formatter',
+          outcome: ToolRunOutcome.policyRejected,
+          inputBytes: utf8.encode(_view.input).length,
+          outputBytes: 0,
+        );
         notifications.show(
           severity: LogSeverity.error,
           title: 'Output rejected',

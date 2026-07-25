@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
+import 'package:rikit/features/activity/domain/activity_repository.dart';
+import 'package:rikit/features/activity/infrastructure/sqlite_activity_repository.dart';
 import 'package:rikit/features/json/application/format_json.dart';
 import 'package:rikit/features/json/domain/json_formatter.dart';
 import 'package:rikit/features/json/domain/json_input_policy.dart';
@@ -20,6 +22,7 @@ class AppDependencies {
   final ApplicationLogger logger;
   final NotificationController notifications;
   final JsonToolController jsonToolController;
+  final ActivityRepository activityRepository;
 
   const AppDependencies._({
     required this.jsonFormatter,
@@ -29,6 +32,7 @@ class AppDependencies {
     required this.logger,
     required this.notifications,
     required this.jsonToolController,
+    required this.activityRepository,
   });
 
   static Future<AppDependencies> create() async {
@@ -50,6 +54,8 @@ class AppDependencies {
     );
     final logRepository = SqliteLogRepository(database);
     logRepository.cleanUp(now: DateTime.now().toUtc());
+    final activityRepository = SqliteActivityRepository(database);
+    activityRepository.cleanUp(now: DateTime.now().toUtc());
     final notifications = NotificationController();
     final logger = ApplicationLogger(
       repository: logRepository,
@@ -63,10 +69,12 @@ class AppDependencies {
       logRepository: logRepository,
       logger: logger,
       notifications: notifications,
+      activityRepository: activityRepository,
       jsonToolController: JsonToolController(
         formatJson: formatJson,
         logger: logger,
         notifications: notifications,
+        activityRepository: activityRepository,
       ),
     );
   }

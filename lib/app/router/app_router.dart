@@ -20,8 +20,9 @@ GoRouter createAppRouter(AppDependencies dependencies) {
         routes: [
           GoRoute(
             path: AppRoutes.home,
-            pageBuilder: (context, state) =>
-                const NoTransitionPage(child: HomePage()),
+            pageBuilder: (context, state) => NoTransitionPage(
+              child: HomePage(repository: dependencies.activityRepository),
+            ),
           ),
           GoRoute(
             path: AppRoutes.jsonFormatter,

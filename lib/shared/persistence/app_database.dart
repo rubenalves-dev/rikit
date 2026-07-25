@@ -30,6 +30,17 @@ final class AppDatabase {
         key TEXT PRIMARY KEY,
         value TEXT NOT NULL
       );
+      CREATE TABLE IF NOT EXISTS daily_activity (
+        day_key TEXT NOT NULL,
+        tool TEXT NOT NULL,
+        outcome TEXT NOT NULL,
+        runs INTEGER NOT NULL,
+        input_bytes INTEGER NOT NULL,
+        output_bytes INTEGER NOT NULL,
+        PRIMARY KEY(day_key, tool, outcome)
+      );
+      CREATE INDEX IF NOT EXISTS idx_activity_day
+        ON daily_activity(day_key);
     ''');
   }
 
