@@ -7,3 +7,17 @@ enum JsonIndent {
   final String characters;
   final String label;
 }
+
+final class JsonFormattingOptions {
+  const JsonFormattingOptions({
+    this.indent = JsonIndent.twoSpaces,
+    this.sortObjectKeys = false,
+    this.normalizeNumbers = false,
+    this.normalizeStrings = true,
+  });
+
+  final JsonIndent indent;
+  final bool sortObjectKeys;
+  final bool normalizeNumbers;
+  final bool normalizeStrings;
+}

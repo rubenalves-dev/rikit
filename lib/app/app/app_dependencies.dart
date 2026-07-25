@@ -18,6 +18,7 @@ class AppDependencies {
     final FormatJson formatJson = FormatJson(
       formatter: jsonFormatter,
       inputPolicy: const JsonInputPolicy(maxInputBytes: 2 * 1024 * 1024),
+      maximumOutputBytes: 2 * 1024 * 1024,
     );
 
     return AppDependencies._(

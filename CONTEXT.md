@@ -4,13 +4,17 @@ Rikit is a collection of focused developer tools. Each tool transforms or inspec
 
 ## JSON Formatter
 
+**JSON formatting**:
+Rewriting JSON for readability using two-space or four-space indentation. Compact output and minification belong to a separate future tool.
+_Avoid_: Minification, compacting
+
 **JSON input**:
 Any valid JSON value supplied for formatting, including objects, arrays, strings, numbers, booleans, and null.
 _Avoid_: JSON object, payload
 
-**Recursive key sorting**:
-Deterministic lexicographical ordering of every object's keys throughout a JSON input, including objects nested inside arrays.
-_Avoid_: Top-level sorting, shallow sorting
+**Recursive natural key sorting**:
+Deterministic ordering of every object's decoded keys throughout a JSON input, including objects nested inside arrays. Category precedence is symbols, lowercase letters, uppercase letters, then numeric keys; numeric keys are ordered by arbitrary-precision value.
+_Avoid_: Top-level sorting, shallow sorting, lexicographical sorting
 
 **Duplicate object key**:
 A repeated member name within the same JSON object. Duplicate object keys are rejected with an error that identifies the duplicated key.
@@ -31,6 +35,10 @@ _Avoid_: String formatting
 **Format command**:
 An explicit request to format the current JSON input, triggered by the primary action or its keyboard shortcut. Editing and pasting input never format it automatically.
 _Avoid_: Live formatting, auto-format
+
+**JSON workspace**:
+The input, output, and selected formatting options held for the current application session. Input and output may survive navigation but are never persisted across application restarts.
+_Avoid_: Draft, saved input
 
 ## Activity
 

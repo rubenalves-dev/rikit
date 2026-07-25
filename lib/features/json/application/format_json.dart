@@ -1,21 +1,35 @@
 import 'package:rikit/features/json/domain/json_formatter.dart';
+import 'package:rikit/features/json/domain/json_formatting_options.dart';
 import 'package:rikit/features/json/domain/json_formatting_results.dart';
 import 'package:rikit/features/json/domain/json_input_policy.dart';
 
 class FormatJson {
-  final JsonFormatter _formatter;
-  final JsonInputPolicy _inputPolicy;
+  const FormatJson({
+    required this.formatter,
+    required this.inputPolicy,
+    required this.maximumOutputBytes,
+  });
 
-  const FormatJson({required this._formatter, required this._inputPolicy});
+  final JsonFormatter formatter;
+  final JsonInputPolicy inputPolicy;
+  final int maximumOutputBytes;
 
   JsonFormattingResult call({
     required String input,
     required JsonFormattingOptions options,
   }) {
-    final decision = _inputPolicy.evaluate(input);
+    final decision = inputPolicy.evaluate(input);
     return switch (decision) {
-      JsonInputAllowed() => _formatter.format(input: input, options: options),
-      JsonInputDenied(:final reason) => JsonInputRejected(reason: reason, maximumBytes: _inputPolicy.maxInputBytes),
-    }
+      JsonInputAllowed() => formatter.format(
+        input: input,
+        options: options,
+        maximumOutputBytes: maximumOutputBytes,
+      ),
+      JsonInputDenied(:final reason, :final actualBytes) => JsonInputRejected(
+        reason: reason,
+        maximumBytes: inputPolicy.maxInputBytes,
+        actualBytes: actualBytes,
+      ),
+    };
   }
 }
