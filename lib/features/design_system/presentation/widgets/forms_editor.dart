@@ -14,9 +14,17 @@ class FormsEditor extends StatefulWidget {
   State<FormsEditor> createState() => _FormsEditorState();
 }
 
-class _FormsEditorState extends State<FormsEditor> with SingleTickerProviderStateMixin {
+class _FormsEditorState extends State<FormsEditor>
+    with SingleTickerProviderStateMixin {
   late TabController _subTabController;
-  final List<String> _subTabs = ['Text Input', 'Textarea', 'Checkbox', 'Radio', 'Slider', 'Toggle'];
+  final List<String> _subTabs = [
+    'Text Input',
+    'Textarea',
+    'Checkbox',
+    'Radio',
+    'Slider',
+    'Toggle',
+  ];
 
   @override
   void initState() {
@@ -47,7 +55,10 @@ class _FormsEditorState extends State<FormsEditor> with SingleTickerProviderStat
             indicatorColor: RikitColors.primary,
             labelColor: RikitColors.text,
             unselectedLabelColor: RikitColors.textMuted,
-            labelStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+            labelStyle: const TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.bold,
+            ),
             tabs: _subTabs.map((t) => Tab(text: t)).toList(),
           ),
         ),
@@ -56,10 +67,19 @@ class _FormsEditorState extends State<FormsEditor> with SingleTickerProviderStat
           child: TabBarView(
             controller: _subTabController,
             children: [
-              _TextInputEditor(controller: widget.controller, isTextarea: false),
+              _TextInputEditor(
+                controller: widget.controller,
+                isTextarea: false,
+              ),
               _TextInputEditor(controller: widget.controller, isTextarea: true),
-              _CheckboxRadioEditor(controller: widget.controller, isRadio: false),
-              _CheckboxRadioEditor(controller: widget.controller, isRadio: true),
+              _CheckboxRadioEditor(
+                controller: widget.controller,
+                isRadio: false,
+              ),
+              _CheckboxRadioEditor(
+                controller: widget.controller,
+                isRadio: true,
+              ),
               _SliderEditor(controller: widget.controller),
               _ToggleEditor(controller: widget.controller),
             ],
@@ -90,14 +110,18 @@ class _TextInputEditorState extends State<_TextInputEditor> {
   Widget build(BuildContext context) {
     final state = widget.controller.state;
     final compName = widget.isTextarea ? 'Textarea' : 'Text Input';
-    final inputComp = state.components.firstWhere((c) => c.name == compName) as TextInputComponent;
+    final inputComp =
+        state.components.firstWhere((c) => c.name == compName)
+            as TextInputComponent;
 
     if (selectedVariationIndex >= inputComp.variations.length) {
       selectedVariationIndex = 0;
     }
 
     final variation = inputComp.variations[selectedVariationIndex];
-    final activeStyle = variation.stateStyles[selectedStateKey] ?? variation.stateStyles['idle']!;
+    final activeStyle =
+        variation.stateStyles[selectedStateKey] ??
+        variation.stateStyles['idle']!;
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -116,7 +140,10 @@ class _TextInputEditorState extends State<_TextInputEditor> {
                     children: [
                       Text(
                         '${widget.isTextarea ? 'Textarea' : 'Text Input'} Styling',
-                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                        ),
                       ),
                       _buildStateSelector(),
                     ],
@@ -132,10 +159,7 @@ class _TextInputEditorState extends State<_TextInputEditor> {
         ),
         const SizedBox(width: 20),
         // Right interactive preview
-        Expanded(
-          flex: 4,
-          child: _buildPreviewPanel(variation),
-        ),
+        Expanded(flex: 4, child: _buildPreviewPanel(variation)),
       ],
     );
   }
@@ -152,7 +176,11 @@ class _TextInputEditorState extends State<_TextInputEditor> {
         value: selectedStateKey,
         dropdownColor: RikitColors.surfaceRaised,
         underline: const SizedBox.shrink(),
-        style: const TextStyle(color: RikitColors.text, fontSize: 12, fontWeight: FontWeight.bold),
+        style: const TextStyle(
+          color: RikitColors.text,
+          fontSize: 12,
+          fontWeight: FontWeight.bold,
+        ),
         items: const [
           DropdownMenuItem(value: 'idle', child: Text('Idle')),
           DropdownMenuItem(value: 'hovered', child: Text('Hovered')),
@@ -172,16 +200,27 @@ class _TextInputEditorState extends State<_TextInputEditor> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('Colors', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12, color: RikitColors.primary)),
+        const Text(
+          'Colors',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 12,
+            color: RikitColors.primary,
+          ),
+        ),
         const SizedBox(height: 10),
         Row(
           children: [
             Expanded(
               child: TextFormField(
                 initialValue: activeStyle.backgroundColor.value,
-                decoration: const InputDecoration(labelText: 'Background Color Token / Hex'),
+                decoration: const InputDecoration(
+                  labelText: 'Background Color Token / Hex',
+                ),
                 onFieldSubmitted: (val) {
-                  final token = val.startsWith('#') ? ColorToken.static(val) : ColorToken.theme(val);
+                  final token = val.startsWith('#')
+                      ? ColorToken.static(val)
+                      : ColorToken.theme(val);
                   _updateStyle(activeStyle.copyWith(backgroundColor: token));
                 },
               ),
@@ -190,9 +229,13 @@ class _TextInputEditorState extends State<_TextInputEditor> {
             Expanded(
               child: TextFormField(
                 initialValue: activeStyle.foregroundColor.value,
-                decoration: const InputDecoration(labelText: 'Text Color Token / Hex'),
+                decoration: const InputDecoration(
+                  labelText: 'Text Color Token / Hex',
+                ),
                 onFieldSubmitted: (val) {
-                  final token = val.startsWith('#') ? ColorToken.static(val) : ColorToken.theme(val);
+                  final token = val.startsWith('#')
+                      ? ColorToken.static(val)
+                      : ColorToken.theme(val);
                   _updateStyle(activeStyle.copyWith(foregroundColor: token));
                 },
               ),
@@ -205,9 +248,13 @@ class _TextInputEditorState extends State<_TextInputEditor> {
             Expanded(
               child: TextFormField(
                 initialValue: activeStyle.borderColor.value,
-                decoration: const InputDecoration(labelText: 'Border Color Token / Hex'),
+                decoration: const InputDecoration(
+                  labelText: 'Border Color Token / Hex',
+                ),
                 onFieldSubmitted: (val) {
-                  final token = val.startsWith('#') ? ColorToken.static(val) : ColorToken.theme(val);
+                  final token = val.startsWith('#')
+                      ? ColorToken.static(val)
+                      : ColorToken.theme(val);
                   _updateStyle(activeStyle.copyWith(borderColor: token));
                 },
               ),
@@ -216,9 +263,13 @@ class _TextInputEditorState extends State<_TextInputEditor> {
             Expanded(
               child: TextFormField(
                 initialValue: activeStyle.placeholderColor.value,
-                decoration: const InputDecoration(labelText: 'Placeholder Color Token / Hex'),
+                decoration: const InputDecoration(
+                  labelText: 'Placeholder Color Token / Hex',
+                ),
                 onFieldSubmitted: (val) {
-                  final token = val.startsWith('#') ? ColorToken.static(val) : ColorToken.theme(val);
+                  final token = val.startsWith('#')
+                      ? ColorToken.static(val)
+                      : ColorToken.theme(val);
                   _updateStyle(activeStyle.copyWith(placeholderColor: token));
                 },
               ),
@@ -233,7 +284,14 @@ class _TextInputEditorState extends State<_TextInputEditor> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('Dimensions & Layout', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12, color: RikitColors.primary)),
+        const Text(
+          'Dimensions & Layout',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 12,
+            color: RikitColors.primary,
+          ),
+        ),
         const SizedBox(height: 10),
         Row(
           children: [
@@ -243,7 +301,11 @@ class _TextInputEditorState extends State<_TextInputEditor> {
                 decoration: const InputDecoration(labelText: 'Border Radius'),
                 onFieldSubmitted: (val) {
                   final d = double.tryParse(val) ?? 6.0;
-                  _updateStyle(activeStyle.copyWith(borderRadius: Dimension(d, activeStyle.borderRadius.unit)));
+                  _updateStyle(
+                    activeStyle.copyWith(
+                      borderRadius: Dimension(d, activeStyle.borderRadius.unit),
+                    ),
+                  );
                 },
               ),
             ),
@@ -254,7 +316,11 @@ class _TextInputEditorState extends State<_TextInputEditor> {
                 decoration: const InputDecoration(labelText: 'Border Width'),
                 onFieldSubmitted: (val) {
                   final d = double.tryParse(val) ?? 1.0;
-                  _updateStyle(activeStyle.copyWith(borderWidth: Dimension(d, activeStyle.borderWidth.unit)));
+                  _updateStyle(
+                    activeStyle.copyWith(
+                      borderWidth: Dimension(d, activeStyle.borderWidth.unit),
+                    ),
+                  );
                 },
               ),
             ),
@@ -269,7 +335,11 @@ class _TextInputEditorState extends State<_TextInputEditor> {
                 decoration: const InputDecoration(labelText: 'Font Size'),
                 onFieldSubmitted: (val) {
                   final d = double.tryParse(val) ?? 14.0;
-                  _updateStyle(activeStyle.copyWith(fontSize: Dimension(d, activeStyle.fontSize.unit)));
+                  _updateStyle(
+                    activeStyle.copyWith(
+                      fontSize: Dimension(d, activeStyle.fontSize.unit),
+                    ),
+                  );
                 },
               ),
             ),
@@ -282,9 +352,17 @@ class _TextInputEditorState extends State<_TextInputEditor> {
 
   void _updateStyle(TextInputStyleSpec newStyle) {
     if (widget.isTextarea) {
-      widget.controller.updateTextareaStyle(selectedVariationIndex, selectedStateKey, newStyle);
+      widget.controller.updateTextareaStyle(
+        selectedVariationIndex,
+        selectedStateKey,
+        newStyle,
+      );
     } else {
-      widget.controller.updateTextInputStyle(selectedVariationIndex, selectedStateKey, newStyle);
+      widget.controller.updateTextInputStyle(
+        selectedVariationIndex,
+        selectedStateKey,
+        newStyle,
+      );
     }
   }
 
@@ -293,17 +371,21 @@ class _TextInputEditorState extends State<_TextInputEditor> {
     final activeState = selectedStateKey == 'disabled'
         ? 'disabled'
         : isFocused
-            ? 'focused'
-            : isHovered
-                ? 'hovered'
-                : selectedStateKey;
+        ? 'focused'
+        : isHovered
+        ? 'hovered'
+        : selectedStateKey;
 
-    final resolved = variation.stateStyles[activeState] ?? variation.stateStyles['idle']!;
+    final resolved =
+        variation.stateStyles[activeState] ?? variation.stateStyles['idle']!;
 
     final bgColor = resolveColorToken(resolved.backgroundColor, globalState);
     final borderColor = resolveColorToken(resolved.borderColor, globalState);
     final textColor = resolveColorToken(resolved.foregroundColor, globalState);
-    final placeholderColor = resolveColorToken(resolved.placeholderColor, globalState);
+    final placeholderColor = resolveColorToken(
+      resolved.placeholderColor,
+      globalState,
+    );
     final borderRadius = resolved.borderRadius.value;
     final borderWidth = resolved.borderWidth.value;
     final fontSize = resolved.fontSize.value;
@@ -313,11 +395,17 @@ class _TextInputEditorState extends State<_TextInputEditor> {
         padding: const EdgeInsets.all(18.0),
         child: Column(
           children: [
-            const Text('Interactive Preview', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+            const Text(
+              'Interactive Preview',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+            ),
             const SizedBox(height: 6),
             Text(
               'Click to focus and type in the ${widget.isTextarea ? 'textarea' : 'text input'}.',
-              style: const TextStyle(color: RikitColors.textMuted, fontSize: 11),
+              style: const TextStyle(
+                color: RikitColors.textMuted,
+                fontSize: 11,
+              ),
               textAlign: TextAlign.center,
             ),
             const Spacer(),
@@ -327,7 +415,10 @@ class _TextInputEditorState extends State<_TextInputEditor> {
               child: Focus(
                 onFocusChange: (f) => setState(() => isFocused = f),
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 10,
+                  ),
                   decoration: BoxDecoration(
                     color: bgColor,
                     borderRadius: BorderRadius.circular(borderRadius),
@@ -339,19 +430,31 @@ class _TextInputEditorState extends State<_TextInputEditor> {
                           child: TextField(
                             enabled: selectedStateKey != 'disabled',
                             maxLines: 5,
-                            style: TextStyle(color: textColor, fontSize: fontSize),
+                            style: TextStyle(
+                              color: textColor,
+                              fontSize: fontSize,
+                            ),
                             decoration: InputDecoration.collapsed(
                               hintText: 'Enter multi-line text...',
-                              hintStyle: TextStyle(color: placeholderColor, fontSize: fontSize),
+                              hintStyle: TextStyle(
+                                color: placeholderColor,
+                                fontSize: fontSize,
+                              ),
                             ),
                           ),
                         )
                       : TextField(
                           enabled: selectedStateKey != 'disabled',
-                          style: TextStyle(color: textColor, fontSize: fontSize),
+                          style: TextStyle(
+                            color: textColor,
+                            fontSize: fontSize,
+                          ),
                           decoration: InputDecoration.collapsed(
                             hintText: 'Enter text here...',
-                            hintStyle: TextStyle(color: placeholderColor, fontSize: fontSize),
+                            hintStyle: TextStyle(
+                              color: placeholderColor,
+                              fontSize: fontSize,
+                            ),
                           ),
                         ),
                 ),
@@ -377,7 +480,8 @@ class _CheckboxRadioEditor extends StatefulWidget {
 
 class _CheckboxRadioEditorState extends State<_CheckboxRadioEditor> {
   int selectedVariationIndex = 0;
-  String selectedStateKey = 'uncheckedIdle'; // 'uncheckedIdle', 'uncheckedHovered', 'checkedIdle', 'checkedHovered', 'disabled'
+  String selectedStateKey =
+      'uncheckedIdle'; // 'uncheckedIdle', 'uncheckedHovered', 'checkedIdle', 'checkedHovered', 'disabled'
   bool isChecked = false;
   bool isHovered = false;
 
@@ -385,14 +489,18 @@ class _CheckboxRadioEditorState extends State<_CheckboxRadioEditor> {
   Widget build(BuildContext context) {
     final state = widget.controller.state;
     final compName = widget.isRadio ? 'Radio' : 'Checkbox';
-    final comp = state.components.firstWhere((c) => c.name == compName) as CheckboxComponent;
+    final comp =
+        state.components.firstWhere((c) => c.name == compName)
+            as CheckboxComponent;
 
     if (selectedVariationIndex >= comp.variations.length) {
       selectedVariationIndex = 0;
     }
 
     final variation = comp.variations[selectedVariationIndex];
-    final activeStyle = variation.stateStyles[selectedStateKey] ?? variation.stateStyles['uncheckedIdle']!;
+    final activeStyle =
+        variation.stateStyles[selectedStateKey] ??
+        variation.stateStyles['uncheckedIdle']!;
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -411,7 +519,10 @@ class _CheckboxRadioEditorState extends State<_CheckboxRadioEditor> {
                     children: [
                       Text(
                         '${widget.isRadio ? 'Radio' : 'Checkbox'} Styling',
-                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                        ),
                       ),
                       _buildStateSelector(),
                     ],
@@ -427,10 +538,7 @@ class _CheckboxRadioEditorState extends State<_CheckboxRadioEditor> {
         ),
         const SizedBox(width: 20),
         // Right preview
-        Expanded(
-          flex: 4,
-          child: _buildPreviewPanel(variation),
-        ),
+        Expanded(flex: 4, child: _buildPreviewPanel(variation)),
       ],
     );
   }
@@ -447,12 +555,25 @@ class _CheckboxRadioEditorState extends State<_CheckboxRadioEditor> {
         value: selectedStateKey,
         dropdownColor: RikitColors.surfaceRaised,
         underline: const SizedBox.shrink(),
-        style: const TextStyle(color: RikitColors.text, fontSize: 12, fontWeight: FontWeight.bold),
+        style: const TextStyle(
+          color: RikitColors.text,
+          fontSize: 12,
+          fontWeight: FontWeight.bold,
+        ),
         items: const [
-          DropdownMenuItem(value: 'uncheckedIdle', child: Text('Unchecked Idle')),
-          DropdownMenuItem(value: 'uncheckedHovered', child: Text('Unchecked Hovered')),
+          DropdownMenuItem(
+            value: 'uncheckedIdle',
+            child: Text('Unchecked Idle'),
+          ),
+          DropdownMenuItem(
+            value: 'uncheckedHovered',
+            child: Text('Unchecked Hovered'),
+          ),
           DropdownMenuItem(value: 'checkedIdle', child: Text('Checked Idle')),
-          DropdownMenuItem(value: 'checkedHovered', child: Text('Checked Hovered')),
+          DropdownMenuItem(
+            value: 'checkedHovered',
+            child: Text('Checked Hovered'),
+          ),
           DropdownMenuItem(value: 'disabled', child: Text('Disabled')),
         ],
         onChanged: (val) {
@@ -468,17 +589,30 @@ class _CheckboxRadioEditorState extends State<_CheckboxRadioEditor> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('Colors', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12, color: RikitColors.primary)),
+        const Text(
+          'Colors',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 12,
+            color: RikitColors.primary,
+          ),
+        ),
         const SizedBox(height: 10),
         Row(
           children: [
             Expanded(
               child: TextFormField(
                 initialValue: activeStyle.backgroundColorUnchecked.value,
-                decoration: const InputDecoration(labelText: 'Unchecked BG Color Token / Hex'),
+                decoration: const InputDecoration(
+                  labelText: 'Unchecked BG Color Token / Hex',
+                ),
                 onFieldSubmitted: (val) {
-                  final token = val.startsWith('#') ? ColorToken.static(val) : ColorToken.theme(val);
-                  _updateStyle(activeStyle.copyWith(backgroundColorUnchecked: token));
+                  final token = val.startsWith('#')
+                      ? ColorToken.static(val)
+                      : ColorToken.theme(val);
+                  _updateStyle(
+                    activeStyle.copyWith(backgroundColorUnchecked: token),
+                  );
                 },
               ),
             ),
@@ -486,10 +620,16 @@ class _CheckboxRadioEditorState extends State<_CheckboxRadioEditor> {
             Expanded(
               child: TextFormField(
                 initialValue: activeStyle.backgroundColorChecked.value,
-                decoration: const InputDecoration(labelText: 'Checked BG Color Token / Hex'),
+                decoration: const InputDecoration(
+                  labelText: 'Checked BG Color Token / Hex',
+                ),
                 onFieldSubmitted: (val) {
-                  final token = val.startsWith('#') ? ColorToken.static(val) : ColorToken.theme(val);
-                  _updateStyle(activeStyle.copyWith(backgroundColorChecked: token));
+                  final token = val.startsWith('#')
+                      ? ColorToken.static(val)
+                      : ColorToken.theme(val);
+                  _updateStyle(
+                    activeStyle.copyWith(backgroundColorChecked: token),
+                  );
                 },
               ),
             ),
@@ -501,9 +641,13 @@ class _CheckboxRadioEditorState extends State<_CheckboxRadioEditor> {
             Expanded(
               child: TextFormField(
                 initialValue: activeStyle.borderColor.value,
-                decoration: const InputDecoration(labelText: 'Border Color Token / Hex'),
+                decoration: const InputDecoration(
+                  labelText: 'Border Color Token / Hex',
+                ),
                 onFieldSubmitted: (val) {
-                  final token = val.startsWith('#') ? ColorToken.static(val) : ColorToken.theme(val);
+                  final token = val.startsWith('#')
+                      ? ColorToken.static(val)
+                      : ColorToken.theme(val);
                   _updateStyle(activeStyle.copyWith(borderColor: token));
                 },
               ),
@@ -512,9 +656,13 @@ class _CheckboxRadioEditorState extends State<_CheckboxRadioEditor> {
             Expanded(
               child: TextFormField(
                 initialValue: activeStyle.indicatorColor.value,
-                decoration: const InputDecoration(labelText: 'Checkmark/Dot Indicator Color'),
+                decoration: const InputDecoration(
+                  labelText: 'Checkmark/Dot Indicator Color',
+                ),
                 onFieldSubmitted: (val) {
-                  final token = val.startsWith('#') ? ColorToken.static(val) : ColorToken.theme(val);
+                  final token = val.startsWith('#')
+                      ? ColorToken.static(val)
+                      : ColorToken.theme(val);
                   _updateStyle(activeStyle.copyWith(indicatorColor: token));
                 },
               ),
@@ -529,17 +677,30 @@ class _CheckboxRadioEditorState extends State<_CheckboxRadioEditor> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('Dimensions', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12, color: RikitColors.primary)),
+        const Text(
+          'Dimensions',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 12,
+            color: RikitColors.primary,
+          ),
+        ),
         const SizedBox(height: 10),
         Row(
           children: [
             Expanded(
               child: TextFormField(
                 initialValue: activeStyle.size.value.toString(),
-                decoration: const InputDecoration(labelText: 'Size (Width & Height)'),
+                decoration: const InputDecoration(
+                  labelText: 'Size (Width & Height)',
+                ),
                 onFieldSubmitted: (val) {
                   final d = double.tryParse(val) ?? 16.0;
-                  _updateStyle(activeStyle.copyWith(size: Dimension(d, activeStyle.size.unit)));
+                  _updateStyle(
+                    activeStyle.copyWith(
+                      size: Dimension(d, activeStyle.size.unit),
+                    ),
+                  );
                 },
               ),
             ),
@@ -550,7 +711,11 @@ class _CheckboxRadioEditorState extends State<_CheckboxRadioEditor> {
                 decoration: const InputDecoration(labelText: 'Border Radius'),
                 onFieldSubmitted: (val) {
                   final d = double.tryParse(val) ?? 4.0;
-                  _updateStyle(activeStyle.copyWith(borderRadius: Dimension(d, activeStyle.borderRadius.unit)));
+                  _updateStyle(
+                    activeStyle.copyWith(
+                      borderRadius: Dimension(d, activeStyle.borderRadius.unit),
+                    ),
+                  );
                 },
               ),
             ),
@@ -562,9 +727,17 @@ class _CheckboxRadioEditorState extends State<_CheckboxRadioEditor> {
 
   void _updateStyle(CheckboxStyleSpec newStyle) {
     if (widget.isRadio) {
-      widget.controller.updateRadioStyle(selectedVariationIndex, selectedStateKey, newStyle);
+      widget.controller.updateRadioStyle(
+        selectedVariationIndex,
+        selectedStateKey,
+        newStyle,
+      );
     } else {
-      widget.controller.updateCheckboxStyle(selectedVariationIndex, selectedStateKey, newStyle);
+      widget.controller.updateCheckboxStyle(
+        selectedVariationIndex,
+        selectedStateKey,
+        newStyle,
+      );
     }
   }
 
@@ -575,17 +748,24 @@ class _CheckboxRadioEditorState extends State<_CheckboxRadioEditor> {
     final activeState = selectedStateKey == 'disabled'
         ? 'disabled'
         : isChecked
-            ? (isHovered ? 'checkedHovered' : 'checkedIdle')
-            : (isHovered ? 'uncheckedHovered' : 'uncheckedIdle');
+        ? (isHovered ? 'checkedHovered' : 'checkedIdle')
+        : (isHovered ? 'uncheckedHovered' : 'uncheckedIdle');
 
-    final resolved = variation.stateStyles[activeState] ?? variation.stateStyles['uncheckedIdle']!;
+    final resolved =
+        variation.stateStyles[activeState] ??
+        variation.stateStyles['uncheckedIdle']!;
 
     final bgColor = resolveColorToken(
-      isChecked ? resolved.backgroundColorChecked : resolved.backgroundColorUnchecked,
+      isChecked
+          ? resolved.backgroundColorChecked
+          : resolved.backgroundColorUnchecked,
       globalState,
     );
     final borderColor = resolveColorToken(resolved.borderColor, globalState);
-    final indicatorColor = resolveColorToken(resolved.indicatorColor, globalState);
+    final indicatorColor = resolveColorToken(
+      resolved.indicatorColor,
+      globalState,
+    );
     final double boxSize = resolved.size.value;
     final double radius = resolved.borderRadius.value;
     final double borderWidth = resolved.borderWidth.value;
@@ -595,7 +775,10 @@ class _CheckboxRadioEditorState extends State<_CheckboxRadioEditor> {
         padding: const EdgeInsets.all(18.0),
         child: Column(
           children: [
-            const Text('Interactive Preview', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+            const Text(
+              'Interactive Preview',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+            ),
             const SizedBox(height: 6),
             const Text(
               'Click the element to toggle its state.',
@@ -620,21 +803,34 @@ class _CheckboxRadioEditorState extends State<_CheckboxRadioEditor> {
                       decoration: BoxDecoration(
                         color: bgColor,
                         borderRadius: BorderRadius.circular(radius),
-                        border: Border.all(color: borderColor, width: borderWidth),
+                        border: Border.all(
+                          color: borderColor,
+                          width: borderWidth,
+                        ),
                       ),
                       alignment: Alignment.center,
                       child: isChecked
                           ? (widget.isRadio
-                              ? Container(
-                                  width: boxSize / 2,
-                                  height: boxSize / 2,
-                                  decoration: BoxDecoration(color: indicatorColor, shape: BoxShape.circle),
-                                )
-                              : Icon(Icons.check_rounded, size: boxSize - 2, color: indicatorColor))
+                                ? Container(
+                                    width: boxSize / 2,
+                                    height: boxSize / 2,
+                                    decoration: BoxDecoration(
+                                      color: indicatorColor,
+                                      shape: BoxShape.circle,
+                                    ),
+                                  )
+                                : Icon(
+                                    Icons.check_rounded,
+                                    size: boxSize - 2,
+                                    color: indicatorColor,
+                                  ))
                           : null,
                     ),
                     const SizedBox(width: 8),
-                    const Text('Label Option', style: TextStyle(color: RikitColors.text, fontSize: 14)),
+                    const Text(
+                      'Label Option',
+                      style: TextStyle(color: RikitColors.text, fontSize: 14),
+                    ),
                   ],
                 ),
               ),
@@ -666,14 +862,18 @@ class _SliderEditorState extends State<_SliderEditor> {
   @override
   Widget build(BuildContext context) {
     final state = widget.controller.state;
-    final comp = state.components.firstWhere((c) => c.name == 'Slider') as SliderComponent;
+    final comp =
+        state.components.firstWhere((c) => c.name == 'Slider')
+            as SliderComponent;
 
     if (selectedVariationIndex >= comp.variations.length) {
       selectedVariationIndex = 0;
     }
 
     final variation = comp.variations[selectedVariationIndex];
-    final activeStyle = variation.stateStyles[selectedStateKey] ?? variation.stateStyles['idle']!;
+    final activeStyle =
+        variation.stateStyles[selectedStateKey] ??
+        variation.stateStyles['idle']!;
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -690,7 +890,13 @@ class _SliderEditorState extends State<_SliderEditor> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text('Slider Track & Thumb Styling', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                      const Text(
+                        'Slider Track & Thumb Styling',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                        ),
+                      ),
                       _buildStateSelector(),
                     ],
                   ),
@@ -705,10 +911,7 @@ class _SliderEditorState extends State<_SliderEditor> {
         ),
         const SizedBox(width: 20),
         // Right preview
-        Expanded(
-          flex: 4,
-          child: _buildPreviewPanel(variation),
-        ),
+        Expanded(flex: 4, child: _buildPreviewPanel(variation)),
       ],
     );
   }
@@ -725,7 +928,11 @@ class _SliderEditorState extends State<_SliderEditor> {
         value: selectedStateKey,
         dropdownColor: RikitColors.surfaceRaised,
         underline: const SizedBox.shrink(),
-        style: const TextStyle(color: RikitColors.text, fontSize: 12, fontWeight: FontWeight.bold),
+        style: const TextStyle(
+          color: RikitColors.text,
+          fontSize: 12,
+          fontWeight: FontWeight.bold,
+        ),
         items: const [
           DropdownMenuItem(value: 'idle', child: Text('Idle')),
           DropdownMenuItem(value: 'hovered', child: Text('Hovered')),
@@ -745,16 +952,27 @@ class _SliderEditorState extends State<_SliderEditor> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('Colors', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12, color: RikitColors.primary)),
+        const Text(
+          'Colors',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 12,
+            color: RikitColors.primary,
+          ),
+        ),
         const SizedBox(height: 10),
         Row(
           children: [
             Expanded(
               child: TextFormField(
                 initialValue: activeStyle.thumbColor.value,
-                decoration: const InputDecoration(labelText: 'Thumb Color Token / Hex'),
+                decoration: const InputDecoration(
+                  labelText: 'Thumb Color Token / Hex',
+                ),
                 onFieldSubmitted: (val) {
-                  final token = val.startsWith('#') ? ColorToken.static(val) : ColorToken.theme(val);
+                  final token = val.startsWith('#')
+                      ? ColorToken.static(val)
+                      : ColorToken.theme(val);
                   _updateStyle(activeStyle.copyWith(thumbColor: token));
                 },
               ),
@@ -763,9 +981,13 @@ class _SliderEditorState extends State<_SliderEditor> {
             Expanded(
               child: TextFormField(
                 initialValue: activeStyle.trackColorActive.value,
-                decoration: const InputDecoration(labelText: 'Active Track Color Token / Hex'),
+                decoration: const InputDecoration(
+                  labelText: 'Active Track Color Token / Hex',
+                ),
                 onFieldSubmitted: (val) {
-                  final token = val.startsWith('#') ? ColorToken.static(val) : ColorToken.theme(val);
+                  final token = val.startsWith('#')
+                      ? ColorToken.static(val)
+                      : ColorToken.theme(val);
                   _updateStyle(activeStyle.copyWith(trackColorActive: token));
                 },
               ),
@@ -778,9 +1000,13 @@ class _SliderEditorState extends State<_SliderEditor> {
             Expanded(
               child: TextFormField(
                 initialValue: activeStyle.trackColorInactive.value,
-                decoration: const InputDecoration(labelText: 'Inactive Track Color Token / Hex'),
+                decoration: const InputDecoration(
+                  labelText: 'Inactive Track Color Token / Hex',
+                ),
                 onFieldSubmitted: (val) {
-                  final token = val.startsWith('#') ? ColorToken.static(val) : ColorToken.theme(val);
+                  final token = val.startsWith('#')
+                      ? ColorToken.static(val)
+                      : ColorToken.theme(val);
                   _updateStyle(activeStyle.copyWith(trackColorInactive: token));
                 },
               ),
@@ -796,7 +1022,14 @@ class _SliderEditorState extends State<_SliderEditor> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('Dimensions', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12, color: RikitColors.primary)),
+        const Text(
+          'Dimensions',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 12,
+            color: RikitColors.primary,
+          ),
+        ),
         const SizedBox(height: 10),
         Row(
           children: [
@@ -806,7 +1039,11 @@ class _SliderEditorState extends State<_SliderEditor> {
                 decoration: const InputDecoration(labelText: 'Thumb Diameter'),
                 onFieldSubmitted: (val) {
                   final d = double.tryParse(val) ?? 16.0;
-                  _updateStyle(activeStyle.copyWith(thumbSize: Dimension(d, activeStyle.thumbSize.unit)));
+                  _updateStyle(
+                    activeStyle.copyWith(
+                      thumbSize: Dimension(d, activeStyle.thumbSize.unit),
+                    ),
+                  );
                 },
               ),
             ),
@@ -817,7 +1054,11 @@ class _SliderEditorState extends State<_SliderEditor> {
                 decoration: const InputDecoration(labelText: 'Track Height'),
                 onFieldSubmitted: (val) {
                   final d = double.tryParse(val) ?? 4.0;
-                  _updateStyle(activeStyle.copyWith(trackHeight: Dimension(d, activeStyle.trackHeight.unit)));
+                  _updateStyle(
+                    activeStyle.copyWith(
+                      trackHeight: Dimension(d, activeStyle.trackHeight.unit),
+                    ),
+                  );
                 },
               ),
             ),
@@ -828,7 +1069,11 @@ class _SliderEditorState extends State<_SliderEditor> {
   }
 
   void _updateStyle(SliderStyleSpec newStyle) {
-    widget.controller.updateSliderStyle(selectedVariationIndex, selectedStateKey, newStyle);
+    widget.controller.updateSliderStyle(
+      selectedVariationIndex,
+      selectedStateKey,
+      newStyle,
+    );
   }
 
   Widget _buildPreviewPanel(ComponentVariation<SliderStyleSpec> variation) {
@@ -837,16 +1082,23 @@ class _SliderEditorState extends State<_SliderEditor> {
     final activeState = selectedStateKey == 'disabled'
         ? 'disabled'
         : isDragging
-            ? 'dragging'
-            : isHovered
-                ? 'hovered'
-                : selectedStateKey;
+        ? 'dragging'
+        : isHovered
+        ? 'hovered'
+        : selectedStateKey;
 
-    final resolved = variation.stateStyles[activeState] ?? variation.stateStyles['idle']!;
+    final resolved =
+        variation.stateStyles[activeState] ?? variation.stateStyles['idle']!;
 
     final thumbColor = resolveColorToken(resolved.thumbColor, globalState);
-    final activeTrackColor = resolveColorToken(resolved.trackColorActive, globalState);
-    final inactiveTrackColor = resolveColorToken(resolved.trackColorInactive, globalState);
+    final activeTrackColor = resolveColorToken(
+      resolved.trackColorActive,
+      globalState,
+    );
+    final inactiveTrackColor = resolveColorToken(
+      resolved.trackColorInactive,
+      globalState,
+    );
     final double thumbSize = resolved.thumbSize.value;
     final double trackHeight = resolved.trackHeight.value;
 
@@ -855,7 +1107,10 @@ class _SliderEditorState extends State<_SliderEditor> {
         padding: const EdgeInsets.all(18.0),
         child: Column(
           children: [
-            const Text('Interactive Preview', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+            const Text(
+              'Interactive Preview',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+            ),
             const SizedBox(height: 6),
             const Text(
               'Drag the slider thumb to modify the value.',
@@ -879,10 +1134,16 @@ class _SliderEditorState extends State<_SliderEditor> {
                         onPanUpdate: selectedStateKey == 'disabled'
                             ? null
                             : (details) {
-                                final RenderBox renderBox = context.findRenderObject() as RenderBox;
-                                final localX = renderBox.globalToLocal(details.globalPosition).dx;
+                                final RenderBox renderBox =
+                                    context.findRenderObject() as RenderBox;
+                                final localX = renderBox
+                                    .globalToLocal(details.globalPosition)
+                                    .dx;
                                 final width = renderBox.size.width - 64;
-                                final newValue = (localX / width).clamp(0.0, 1.0);
+                                final newValue = (localX / width).clamp(
+                                  0.0,
+                                  1.0,
+                                );
                                 setState(() => sliderValue = newValue);
                               },
                         child: Stack(
@@ -909,7 +1170,9 @@ class _SliderEditorState extends State<_SliderEditor> {
                             ),
                             // Thumb
                             Positioned(
-                              left: sliderValue * 150, // simple scale mapping for UI preview
+                              left:
+                                  sliderValue *
+                                  150, // simple scale mapping for UI preview
                               child: Container(
                                 width: thumbSize,
                                 height: thumbSize,
@@ -917,7 +1180,11 @@ class _SliderEditorState extends State<_SliderEditor> {
                                   color: thumbColor,
                                   shape: BoxShape.circle,
                                   boxShadow: const [
-                                    BoxShadow(color: Colors.black26, blurRadius: 4, offset: Offset(0, 2)),
+                                    BoxShadow(
+                                      color: Colors.black26,
+                                      blurRadius: 4,
+                                      offset: Offset(0, 2),
+                                    ),
                                   ],
                                 ),
                               ),
@@ -929,7 +1196,10 @@ class _SliderEditorState extends State<_SliderEditor> {
                     const SizedBox(width: 14),
                     Text(
                       '${(sliderValue * 100).round()}%',
-                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12,
+                      ),
                     ),
                   ],
                 ),
@@ -954,21 +1224,26 @@ class _ToggleEditor extends StatefulWidget {
 
 class _ToggleEditorState extends State<_ToggleEditor> {
   int selectedVariationIndex = 0;
-  String selectedStateKey = 'offIdle'; // 'offIdle', 'offHovered', 'onIdle', 'onHovered', 'disabled'
+  String selectedStateKey =
+      'offIdle'; // 'offIdle', 'offHovered', 'onIdle', 'onHovered', 'disabled'
   bool isToggleOn = false;
   bool isHovered = false;
 
   @override
   Widget build(BuildContext context) {
     final state = widget.controller.state;
-    final comp = state.components.firstWhere((c) => c.name == 'Toggle') as ToggleComponent;
+    final comp =
+        state.components.firstWhere((c) => c.name == 'Toggle')
+            as ToggleComponent;
 
     if (selectedVariationIndex >= comp.variations.length) {
       selectedVariationIndex = 0;
     }
 
     final variation = comp.variations[selectedVariationIndex];
-    final activeStyle = variation.stateStyles[selectedStateKey] ?? variation.stateStyles['offIdle']!;
+    final activeStyle =
+        variation.stateStyles[selectedStateKey] ??
+        variation.stateStyles['offIdle']!;
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -985,7 +1260,13 @@ class _ToggleEditorState extends State<_ToggleEditor> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text('Toggle Switch Styling', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                      const Text(
+                        'Toggle Switch Styling',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                        ),
+                      ),
                       _buildStateSelector(),
                     ],
                   ),
@@ -1000,10 +1281,7 @@ class _ToggleEditorState extends State<_ToggleEditor> {
         ),
         const SizedBox(width: 20),
         // Right preview
-        Expanded(
-          flex: 4,
-          child: _buildPreviewPanel(variation),
-        ),
+        Expanded(flex: 4, child: _buildPreviewPanel(variation)),
       ],
     );
   }
@@ -1020,7 +1298,11 @@ class _ToggleEditorState extends State<_ToggleEditor> {
         value: selectedStateKey,
         dropdownColor: RikitColors.surfaceRaised,
         underline: const SizedBox.shrink(),
-        style: const TextStyle(color: RikitColors.text, fontSize: 12, fontWeight: FontWeight.bold),
+        style: const TextStyle(
+          color: RikitColors.text,
+          fontSize: 12,
+          fontWeight: FontWeight.bold,
+        ),
         items: const [
           DropdownMenuItem(value: 'offIdle', child: Text('Off Idle')),
           DropdownMenuItem(value: 'offHovered', child: Text('Off Hovered')),
@@ -1041,16 +1323,27 @@ class _ToggleEditorState extends State<_ToggleEditor> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('Colors', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12, color: RikitColors.primary)),
+        const Text(
+          'Colors',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 12,
+            color: RikitColors.primary,
+          ),
+        ),
         const SizedBox(height: 10),
         Row(
           children: [
             Expanded(
               child: TextFormField(
                 initialValue: activeStyle.thumbColor.value,
-                decoration: const InputDecoration(labelText: 'Thumb Circle Color'),
+                decoration: const InputDecoration(
+                  labelText: 'Thumb Circle Color',
+                ),
                 onFieldSubmitted: (val) {
-                  final token = val.startsWith('#') ? ColorToken.static(val) : ColorToken.theme(val);
+                  final token = val.startsWith('#')
+                      ? ColorToken.static(val)
+                      : ColorToken.theme(val);
                   _updateStyle(activeStyle.copyWith(thumbColor: token));
                 },
               ),
@@ -1059,9 +1352,13 @@ class _ToggleEditorState extends State<_ToggleEditor> {
             Expanded(
               child: TextFormField(
                 initialValue: activeStyle.trackColorOn.value,
-                decoration: const InputDecoration(labelText: 'Track Color (On)'),
+                decoration: const InputDecoration(
+                  labelText: 'Track Color (On)',
+                ),
                 onFieldSubmitted: (val) {
-                  final token = val.startsWith('#') ? ColorToken.static(val) : ColorToken.theme(val);
+                  final token = val.startsWith('#')
+                      ? ColorToken.static(val)
+                      : ColorToken.theme(val);
                   _updateStyle(activeStyle.copyWith(trackColorOn: token));
                 },
               ),
@@ -1074,9 +1371,13 @@ class _ToggleEditorState extends State<_ToggleEditor> {
             Expanded(
               child: TextFormField(
                 initialValue: activeStyle.trackColorOff.value,
-                decoration: const InputDecoration(labelText: 'Track Color (Off)'),
+                decoration: const InputDecoration(
+                  labelText: 'Track Color (Off)',
+                ),
                 onFieldSubmitted: (val) {
-                  final token = val.startsWith('#') ? ColorToken.static(val) : ColorToken.theme(val);
+                  final token = val.startsWith('#')
+                      ? ColorToken.static(val)
+                      : ColorToken.theme(val);
                   _updateStyle(activeStyle.copyWith(trackColorOff: token));
                 },
               ),
@@ -1092,7 +1393,14 @@ class _ToggleEditorState extends State<_ToggleEditor> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('Dimensions', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12, color: RikitColors.primary)),
+        const Text(
+          'Dimensions',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 12,
+            color: RikitColors.primary,
+          ),
+        ),
         const SizedBox(height: 10),
         Row(
           children: [
@@ -1102,7 +1410,11 @@ class _ToggleEditorState extends State<_ToggleEditor> {
                 decoration: const InputDecoration(labelText: 'Width'),
                 onFieldSubmitted: (val) {
                   final d = double.tryParse(val) ?? 44.0;
-                  _updateStyle(activeStyle.copyWith(width: Dimension(d, activeStyle.width.unit)));
+                  _updateStyle(
+                    activeStyle.copyWith(
+                      width: Dimension(d, activeStyle.width.unit),
+                    ),
+                  );
                 },
               ),
             ),
@@ -1113,7 +1425,11 @@ class _ToggleEditorState extends State<_ToggleEditor> {
                 decoration: const InputDecoration(labelText: 'Height'),
                 onFieldSubmitted: (val) {
                   final d = double.tryParse(val) ?? 24.0;
-                  _updateStyle(activeStyle.copyWith(height: Dimension(d, activeStyle.height.unit)));
+                  _updateStyle(
+                    activeStyle.copyWith(
+                      height: Dimension(d, activeStyle.height.unit),
+                    ),
+                  );
                 },
               ),
             ),
@@ -1124,7 +1440,11 @@ class _ToggleEditorState extends State<_ToggleEditor> {
                 decoration: const InputDecoration(labelText: 'Thumb Size'),
                 onFieldSubmitted: (val) {
                   final d = double.tryParse(val) ?? 16.0;
-                  _updateStyle(activeStyle.copyWith(thumbSize: Dimension(d, activeStyle.thumbSize.unit)));
+                  _updateStyle(
+                    activeStyle.copyWith(
+                      thumbSize: Dimension(d, activeStyle.thumbSize.unit),
+                    ),
+                  );
                 },
               ),
             ),
@@ -1135,7 +1455,11 @@ class _ToggleEditorState extends State<_ToggleEditor> {
   }
 
   void _updateStyle(ToggleStyleSpec newStyle) {
-    widget.controller.updateToggleStyle(selectedVariationIndex, selectedStateKey, newStyle);
+    widget.controller.updateToggleStyle(
+      selectedVariationIndex,
+      selectedStateKey,
+      newStyle,
+    );
   }
 
   Widget _buildPreviewPanel(ComponentVariation<ToggleStyleSpec> variation) {
@@ -1144,10 +1468,11 @@ class _ToggleEditorState extends State<_ToggleEditor> {
     final activeState = selectedStateKey == 'disabled'
         ? 'disabled'
         : isToggleOn
-            ? (isHovered ? 'onHovered' : 'onIdle')
-            : (isHovered ? 'offHovered' : 'offIdle');
+        ? (isHovered ? 'onHovered' : 'onIdle')
+        : (isHovered ? 'offHovered' : 'offIdle');
 
-    final resolved = variation.stateStyles[activeState] ?? variation.stateStyles['offIdle']!;
+    final resolved =
+        variation.stateStyles[activeState] ?? variation.stateStyles['offIdle']!;
 
     final thumbColor = resolveColorToken(resolved.thumbColor, globalState);
     final trackColor = resolveColorToken(
@@ -1163,7 +1488,10 @@ class _ToggleEditorState extends State<_ToggleEditor> {
         padding: const EdgeInsets.all(18.0),
         child: Column(
           children: [
-            const Text('Interactive Preview', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+            const Text(
+              'Interactive Preview',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+            ),
             const SizedBox(height: 6),
             const Text(
               'Click the switch to toggle it on/off.',
@@ -1187,7 +1515,9 @@ class _ToggleEditorState extends State<_ToggleEditor> {
                     color: trackColor,
                     borderRadius: BorderRadius.circular(height / 2),
                   ),
-                  alignment: isToggleOn ? Alignment.centerRight : Alignment.centerLeft,
+                  alignment: isToggleOn
+                      ? Alignment.centerRight
+                      : Alignment.centerLeft,
                   child: Container(
                     width: thumbDiameter,
                     height: thumbDiameter,
@@ -1195,7 +1525,11 @@ class _ToggleEditorState extends State<_ToggleEditor> {
                       color: thumbColor,
                       shape: BoxShape.circle,
                       boxShadow: const [
-                        BoxShadow(color: Colors.black12, blurRadius: 2, offset: Offset(0, 1)),
+                        BoxShadow(
+                          color: Colors.black12,
+                          blurRadius: 2,
+                          offset: Offset(0, 1),
+                        ),
                       ],
                     ),
                   ),

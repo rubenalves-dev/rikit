@@ -478,7 +478,11 @@ class _DropdownEditorState extends State<DropdownEditor> {
   }
 
   void _updateDropdownSpec(DropdownStyleSpec newSpec) {
-    widget.controller.updateDropdownStyle(selectedVariationIndex, 'idle', newSpec);
+    widget.controller.updateDropdownStyle(
+      selectedVariationIndex,
+      'idle',
+      newSpec,
+    );
   }
 
   Widget _buildPreviewPanel(DropdownStyleSpec spec) {
