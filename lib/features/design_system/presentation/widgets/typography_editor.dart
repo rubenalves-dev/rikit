@@ -98,10 +98,7 @@ class TypographyEditor extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: 6),
-                    Switch(
-                      value: isGrouped,
-                      onChanged: onGroupToggled,
-                    ),
+                    Switch(value: isGrouped, onChanged: onGroupToggled),
                   ],
                 ),
               ],
@@ -127,7 +124,8 @@ class TypographyEditor extends StatelessWidget {
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 itemCount: styles.length,
-                separatorBuilder: (context, index) => const SizedBox(height: 16),
+                separatorBuilder: (context, index) =>
+                    const SizedBox(height: 16),
                 itemBuilder: (context, index) {
                   final item = styles[index];
                   return _buildEditorRow(
