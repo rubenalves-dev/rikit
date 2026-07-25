@@ -1,18 +1,43 @@
+import 'package:flutter/foundation.dart';
+import 'package:path/path.dart' as path;
+import 'package:path_provider/path_provider.dart';
 import 'package:rikit/features/json/application/format_json.dart';
 import 'package:rikit/features/json/domain/json_formatter.dart';
 import 'package:rikit/features/json/domain/json_input_policy.dart';
 import 'package:rikit/features/json/infrastructure/dart_json_formatter.dart';
+import 'package:rikit/shared/logging/application/application_logger.dart';
+import 'package:rikit/shared/logging/domain/log_repository.dart';
+import 'package:rikit/shared/logging/infrastructure/sqlite_log_repository.dart';
+import 'package:rikit/shared/notifications/notification_controller.dart';
+import 'package:rikit/shared/persistence/app_database.dart';
 
 class AppDependencies {
   final JsonFormatter jsonFormatter;
   final FormatJson formatJson;
+  final AppDatabase database;
+  final LogRepository logRepository;
+  final ApplicationLogger logger;
+  final NotificationController notifications;
 
   const AppDependencies._({
     required this.jsonFormatter,
     required this.formatJson,
+    required this.database,
+    required this.logRepository,
+    required this.logger,
+    required this.notifications,
   });
 
-  factory AppDependencies.create() {
+  static Future<AppDependencies> create() async {
+    final directory = await getApplicationSupportDirectory();
+    return _withDatabase(
+      AppDatabase.open(path.join(directory.path, 'rikit.db')),
+    );
+  }
+
+  factory AppDependencies.forTest() => _withDatabase(AppDatabase.inMemory());
+
+  static AppDependencies _withDatabase(AppDatabase database) {
     final JsonFormatter jsonFormatter = DartJsonFormatter();
 
     final FormatJson formatJson = FormatJson(
@@ -20,10 +45,24 @@ class AppDependencies {
       inputPolicy: const JsonInputPolicy(maxInputBytes: 2 * 1024 * 1024),
       maximumOutputBytes: 2 * 1024 * 1024,
     );
+    final logRepository = SqliteLogRepository(database);
+    logRepository.cleanUp(now: DateTime.now().toUtc());
 
     return AppDependencies._(
       jsonFormatter: jsonFormatter,
       formatJson: formatJson,
+      database: database,
+      logRepository: logRepository,
+      logger: ApplicationLogger(
+        repository: logRepository,
+        isDevelopment: kDebugMode,
+      ),
+      notifications: NotificationController(),
     );
+  }
+
+  void dispose() {
+    notifications.dispose();
+    database.dispose();
   }
 }

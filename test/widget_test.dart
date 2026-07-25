@@ -10,7 +10,7 @@ void main() {
     tester.view.physicalSize = const Size(1280, 800);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.reset);
-    await tester.pumpWidget(RikitApp(dependencies: AppDependencies.create()));
+    await tester.pumpWidget(RikitApp(dependencies: AppDependencies.forTest()));
     await tester.pumpAndSettle();
 
     expect(find.text('Good tools. Zero friction.'), findsOneWidget);

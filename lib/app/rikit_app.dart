@@ -16,6 +16,13 @@ class _RikitAppState extends State<RikitApp> {
   late final router = createAppRouter(widget.dependencies);
 
   @override
+  void dispose() {
+    router.dispose();
+    widget.dependencies.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
       title: 'Rikit',
