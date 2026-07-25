@@ -3,16 +3,20 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rikit/app/router/app_routes.dart';
+import 'package:rikit/shared/notifications/notification_controller.dart';
+import 'package:rikit/shared/notifications/notification_overlay.dart';
 import 'package:rikit/shared/presentation/rikit_theme.dart';
 
 class AppShell extends StatelessWidget {
   const AppShell({
     required this.currentLocation,
+    required this.notifications,
     required this.child,
     super.key,
   });
 
   final String currentLocation;
+  final NotificationController notifications;
   final Widget child;
 
   @override
@@ -40,6 +44,11 @@ class AppShell extends StatelessWidget {
                 ),
               ),
             ],
+          ),
+          Positioned(
+            top: 22,
+            right: 22,
+            child: NotificationOverlay(controller: notifications),
           ),
         ],
       ),

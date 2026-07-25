@@ -8,7 +8,7 @@ void main() {
     tester.view.physicalSize = const Size(1280, 800);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.reset);
-    await tester.pumpWidget(RikitApp(dependencies: AppDependencies.create()));
+    await tester.pumpWidget(RikitApp(dependencies: AppDependencies.forTest()));
     await tester.pumpAndSettle();
 
     expect(
@@ -22,7 +22,7 @@ void main() {
     tester.view.physicalSize = const Size(800, 700);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.reset);
-    await tester.pumpWidget(RikitApp(dependencies: AppDependencies.create()));
+    await tester.pumpWidget(RikitApp(dependencies: AppDependencies.forTest()));
     await tester.pumpAndSettle();
 
     expect(tester.getSize(find.byKey(const ValueKey('app-sidebar'))).width, 76);
@@ -33,31 +33,23 @@ void main() {
     tester.view.physicalSize = const Size(1280, 800);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.reset);
-    await tester.pumpWidget(RikitApp(dependencies: AppDependencies.create()));
+    await tester.pumpWidget(RikitApp(dependencies: AppDependencies.forTest()));
     await tester.pumpAndSettle();
 
     await tester.tap(find.byKey(const ValueKey('nav-Logs')));
     await tester.pumpAndSettle();
-    expect(
-      find.text(
-        'Sanitized application events and diagnostics will appear here.',
-      ),
-      findsOneWidget,
-    );
+    expect(find.text('No matching logs'), findsOneWidget);
 
     await tester.tap(find.byKey(const ValueKey('nav-Settings')));
     await tester.pumpAndSettle();
-    expect(
-      find.text('Tune persistence, retention, and application preferences.'),
-      findsOneWidget,
-    );
+    expect(find.text('Log retention'), findsOneWidget);
   });
 
   testWidgets('matches the desktop shell golden', (tester) async {
     tester.view.physicalSize = const Size(1280, 800);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.reset);
-    await tester.pumpWidget(RikitApp(dependencies: AppDependencies.create()));
+    await tester.pumpWidget(RikitApp(dependencies: AppDependencies.forTest()));
     await tester.pumpAndSettle();
 
     await expectLater(
