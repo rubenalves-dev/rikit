@@ -22,8 +22,25 @@ final class JsonFormattingFailed extends JsonFormattingResult {
 }
 
 final class JsonInputRejected extends JsonFormattingResult {
-  final String? reason;
-  final int? maximumBytes;
+  final String reason;
+  final int maximumBytes;
+  final int actualBytes;
 
-  const JsonInputRejected({this.reason, this.maximumBytes});
+  const JsonInputRejected({
+    required this.reason,
+    required this.maximumBytes,
+    required this.actualBytes,
+  });
+}
+
+final class JsonOutputRejected extends JsonFormattingResult {
+  final String reason;
+  final int maximumBytes;
+  final int? actualBytes;
+
+  const JsonOutputRejected({
+    required this.reason,
+    required this.maximumBytes,
+    this.actualBytes,
+  });
 }
