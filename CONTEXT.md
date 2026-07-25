@@ -67,3 +67,43 @@ _Avoid_: Request, job
 **Activity summary**:
 Privacy-safe daily aggregate counts and byte totals grouped by tool and outcome, retained for one year. The dashboard presents day, week, month, six-month, and one-year views; outcomes distinguish successful runs, validation failures, and policy rejections.
 _Avoid_: Usage log, payload history
+
+## Design System Creator
+
+**Design System Workspace**:
+The session state holding all current global token scales, core and custom color rows, typography settings, component variations, and their active state styles.
+
+**Global Token Scale**:
+An extensible list of user-defined layout scaling steps (for border-radius, spacing, or shadows), associating size keys (such as `xs`, `sm`, `md`, `lg`, `xl`) with their dimension or styling values. A single nominated key serves as the default fallback token (e.g., `--radius`).
+_Avoid_: Fixed token map
+
+**Core Color Row**:
+A non-removable color definition (`primary`, `secondary`, `accent`, `base`, `muted`, `destructive`, `borders`, `rings`) that dynamically generates 11 shades (`50` to `950`) based on HSL lightness and a contrast-selected foreground (`on-[color]`).
+_Avoid_: Removable core colors
+
+**Custom Color Row**:
+A user-created color definition that generates shades and contrast-aware foregrounds like a Core Color Row, but can be custom-named, renamed, and deleted.
+
+**Design Component**:
+A stylized interactive element (such as Button, Dropdown, Text Input, Textarea, Checkbox, Radio, Slider, Toggle) characterized by a name, a list of variations, and an extensible list of component-specific states.
+_Avoid_: Single-state components
+
+**Component Variation**:
+A named styling variant for a design component (e.g., "Default", "Outline", "Ghost").
+_Avoid_: Hardcoded styles
+
+**Component State**:
+A distinct interactive condition (such as `idle`, `hovered`, `pressed`, `focused`, `disabled`, `checked`, `unchecked`, `on`, `off`, `dragging`) that holds strongly typed styling properties for a specific component variation.
+
+**System Font**:
+A font loaded dynamically from the host operating system's native manager (`osascript` on macOS, `powershell` on Windows), falling back to a pre-defined list of common typography typefaces.
+_Avoid_: Google Fonts-only
+
+**Style Preset**:
+One of five system configurations (Minimalist, Sharp, Full Rounded, Compact, Spacious) that seeds or resets the entire design system workspace.
+_Avoid_: Partial reset
+
+**Design Export**:
+The final output of all design tokens and component styles formatted in CSS custom properties (default), JSON, YAML, or plain TXT.
+_Avoid_: Non-agnostic export
+
