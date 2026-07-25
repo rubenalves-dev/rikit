@@ -91,4 +91,33 @@ void main() {
       0.0,
     );
   });
+
+  testWidgets('can navigate to Button, Dropdown, and Forms editors', (
+    tester,
+  ) async {
+    await setupScreenSize(tester);
+    final controller = DesignSystemController();
+    await tester.pumpWidget(buildTestableWidget(controller));
+    await tester.pump();
+
+    // Tap Button Tab
+    await tester.tap(find.text('Button'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Styling Specifications'), findsOneWidget);
+    expect(find.text('Action Button'), findsOneWidget);
+
+    // Tap Dropdown Tab
+    await tester.tap(find.text('Dropdown'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Trigger Button Styling'), findsOneWidget);
+    expect(find.text('Menu Popover Styling'), findsOneWidget);
+
+    // Tap Forms Tab
+    await tester.tap(find.text('Forms'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Text Input Styling'), findsOneWidget);
+  });
 }
