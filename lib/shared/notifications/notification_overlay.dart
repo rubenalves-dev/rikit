@@ -122,71 +122,102 @@ class _NotificationCard extends StatelessWidget {
       LogSeverity.information => Icons.check_circle_outline_rounded,
       LogSeverity.debug => Icons.bug_report_outlined,
     };
+    final content = Container(
+      key: ValueKey('notification-${message.id}'),
+      padding: const EdgeInsets.all(13),
+      decoration: BoxDecoration(
+        color: RikitColors.surfaceRaised,
+        borderRadius: BorderRadius.circular(13),
+        border: Border.all(color: color.withValues(alpha: .35)),
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.black38,
+            blurRadius: 22,
+            offset: Offset(0, 8),
+          ),
+        ],
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(icon, size: 19, color: color),
+          const SizedBox(width: 11),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  message.title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    color: RikitColors.text,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  message.body,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    color: RikitColors.textMuted,
+                    fontSize: 12,
+                    height: 1.35,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          if (message.action != null) ...[
+            const SizedBox(width: 7),
+            const Padding(
+              padding: EdgeInsets.only(top: 3),
+              child: Icon(
+                Icons.chevron_right_rounded,
+                key: ValueKey('notification-action-icon'),
+                size: 18,
+                color: RikitColors.textMuted,
+              ),
+            ),
+          ],
+          IconButton(
+            tooltip: 'Dismiss notification',
+            onPressed: () => controller.remove(message.id),
+            padding: const EdgeInsets.all(4),
+            constraints: const BoxConstraints(),
+            icon: const Icon(
+              Icons.close_rounded,
+              size: 15,
+              color: RikitColors.textMuted,
+            ),
+          ),
+        ],
+      ),
+    );
+    final card = message.action == null
+        ? content
+        : Semantics(
+            button: true,
+            label: message.actionLabel,
+            child: Material(
+              color: Colors.transparent,
+              borderRadius: BorderRadius.circular(13),
+              clipBehavior: Clip.antiAlias,
+              child: InkWell(
+                onTap: message.action,
+                canRequestFocus: true,
+                focusColor: RikitColors.surfaceHover,
+                hoverColor: RikitColors.surfaceHover,
+                child: content,
+              ),
+            ),
+          );
     return MouseRegion(
       onEnter: (_) => controller.pause(message.id),
       onExit: (_) => controller.resume(message.id),
-      child: Container(
-        key: ValueKey('notification-${message.id}'),
-        padding: const EdgeInsets.all(13),
-        decoration: BoxDecoration(
-          color: RikitColors.surfaceRaised,
-          borderRadius: BorderRadius.circular(13),
-          border: Border.all(color: color.withValues(alpha: .35)),
-          boxShadow: const [
-            BoxShadow(
-              color: Colors.black38,
-              blurRadius: 22,
-              offset: Offset(0, 8),
-            ),
-          ],
-        ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Icon(icon, size: 19, color: color),
-            const SizedBox(width: 11),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    message.title,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      color: RikitColors.text,
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    message.body,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      color: RikitColors.textMuted,
-                      fontSize: 12,
-                      height: 1.35,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            InkWell(
-              onTap: () => controller.remove(message.id),
-              child: const Padding(
-                padding: EdgeInsets.all(4),
-                child: Icon(
-                  Icons.close_rounded,
-                  size: 15,
-                  color: RikitColors.textMuted,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
+      child: card,
     );
   }
 }

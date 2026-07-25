@@ -17,7 +17,7 @@ Deterministic ordering of every object's decoded keys throughout a JSON input, i
 _Avoid_: Top-level sorting, shallow sorting, lexicographical sorting
 
 **Duplicate object key**:
-A repeated member name within the same JSON object. Duplicate object keys are rejected with an error that identifies the duplicated key.
+A repeated member name within the same JSON object. Duplicate object keys are rejected with an error that identifies the duplicated key; its input diagnostic selects the entire second key occurrence that made the object invalid.
 _Avoid_: Last-key-wins
 
 **Exact number representation**:
@@ -39,6 +39,24 @@ _Avoid_: Live formatting, auto-format
 **JSON workspace**:
 The input, output, and selected formatting options held for the current application session. Input and output may survive navigation but are never persisted across application restarts.
 _Avoid_: Draft, saved input
+
+**JSON editor**:
+The code-oriented input and output panes of the JSON workspace. Both panes display gutter line numbers to support diagnostics and comparison. Source lines do not wrap and may be navigated horizontally, preserving a one-to-one relationship between source lines and gutter line numbers. The output pane remains read-only.
+_Avoid_: Text box, wrapped editor
+
+**Input diagnostic**:
+A formatting failure associated with an exact position in a specific revision of the current JSON input. The editor automatically reveals the position, exclusively highlights the containing line, focuses the input editor, and selects or marks the offending character or token with a caret. Invoking its notification repeats the same navigation while the JSON Formatter remains visible. Editing the input or leaving the tool clears the diagnostic and permanently invalidates its notification action. A JSON workspace has at most one active input diagnostic; every later formatting attempt invalidates the previous diagnostic action.
+_Avoid_: Error message, line-and-column text
+
+## Notifications
+
+**Actionable notification**:
+A notification linked to a currently available user action. Its entire card is the interaction target, while a non-button icon on the right communicates actionability. Error severity alone never makes a notification actionable; an editor error is actionable only when it carries source-location information the current editor can use. The affordance is absent—not disabled—when the required application context is unavailable, the information is unusable, or the action has been invalidated. Actionable notifications are keyboard-focusable, expose an accessible action name, and activate with Enter or Space.
+_Avoid_: Clickable popup, toast link
+
+**Shortcut label**:
+The shared, platform-aware visual representation of a keyboard shortcut throughout the application. Every shortcut uses the same component, spacing, typography, and high-contrast light-gray foreground on a gray background, while key names and symbols match the running operating system.
+_Avoid_: Shortcut text, keyboard hint
 
 ## Activity
 

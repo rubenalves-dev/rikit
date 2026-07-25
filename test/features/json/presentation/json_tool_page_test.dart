@@ -27,7 +27,10 @@ void main() {
     await tester.enterText(find.byKey(const ValueKey('json-input')), '{"a":1}');
     await tester.pump();
 
-    expect(find.byKey(const ValueKey('json-output')), findsNothing);
+    final emptyOutput = tester.widget<TextField>(
+      find.byKey(const ValueKey('json-output')),
+    );
+    expect(emptyOutput.controller!.text, isEmpty);
 
     await tester.tap(find.byKey(const ValueKey('format-json')));
     await tester.pump();
@@ -78,6 +81,50 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('{"session":true}'), findsOneWidget);
+  });
+
+  testWidgets('shows line gutters and navigates to a duplicate key', (
+    tester,
+  ) async {
+    final dependencies = await pumpJsonPage(tester);
+    final input = '{\n"a": 1,\n${List.filled(35, '').join('\n')}"a": 2\n}';
+    await tester.enterText(find.byKey(const ValueKey('json-input')), input);
+    dependencies.jsonToolController.format();
+    await tester.pumpAndSettle();
+
+    expect(dependencies.jsonToolController.view.errorOffset, isNotNull);
+    expect(
+      find.byKey(const ValueKey('json-line-number-gutter')),
+      findsNWidgets(2),
+    );
+    expect(
+      find.byKey(const ValueKey('json-diagnostic-line-highlight')),
+      findsOneWidget,
+    );
+    expect(find.byKey(const ValueKey('notification-action-icon')), findsOne);
+    final field = tester.widget<TextField>(
+      find.byKey(const ValueKey('json-input')),
+    );
+    expect(field.focusNode!.hasFocus, isTrue);
+    expect(
+      field.controller!.selection.textInside(field.controller!.text),
+      '"a"',
+    );
+
+    field.controller!.selection = const TextSelection.collapsed(offset: 0);
+    await tester.tap(find.byKey(const ValueKey('notification-0')));
+    await tester.pumpAndSettle();
+    expect(
+      field.controller!.selection.textInside(field.controller!.text),
+      '"a"',
+    );
+
+    await tester.tap(find.byKey(const ValueKey('nav-Home')));
+    await tester.pumpAndSettle();
+    expect(
+      find.byKey(const ValueKey('notification-action-icon')),
+      findsNothing,
+    );
   });
 
   testWidgets('matches the JSON formatter desktop golden', (tester) async {

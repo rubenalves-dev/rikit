@@ -56,6 +56,25 @@ void main() {
     expect(notification.title, 'Invalid JSON');
     expect(notification.body, contains('Duplicate object key "a"'));
     expect(notification.body, contains('line 3'));
+    expect(notification.action, isNotNull);
+    expect(controller.view.errorLength, 3);
+  });
+
+  test('invalidates a diagnostic action when input changes', () {
+    final controller = dependencies.jsonToolController;
+    controller
+      ..updateInput('{"a": 1, "a": 2}')
+      ..format();
+    final notification = dependencies.notifications.messages.single;
+    final initialRequest = controller.diagnosticNavigationRequest;
+
+    notification.action!();
+    expect(controller.diagnosticNavigationRequest, initialRequest + 1);
+
+    controller.updateInput('{"a": 1}');
+
+    expect(controller.view.errorOffset, isNull);
+    expect(dependencies.notifications.messages.single.action, isNull);
   });
 
   test('moves output back to input without formatting again', () {

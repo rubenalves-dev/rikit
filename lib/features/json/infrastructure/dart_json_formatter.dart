@@ -32,8 +32,32 @@ final class DartJsonFormatter implements JsonFormatter {
         actualBytes: error.actualBytes,
       );
     } on FormatException catch (error) {
-      return JsonFormattingFailed(message: error.message, offset: error.offset);
+      return JsonFormattingFailed(
+        message: error.message,
+        offset: error.offset,
+        length: _diagnosticLength(input, error),
+      );
     }
+  }
+
+  int _diagnosticLength(String input, FormatException error) {
+    final offset = error.offset;
+    if (offset == null || offset < 0 || offset >= input.length) return 0;
+    if (!error.message.startsWith('Duplicate object key') ||
+        input.codeUnitAt(offset) != 0x22) {
+      return 1;
+    }
+    var escaped = false;
+    for (var index = offset + 1; index < input.length; index++) {
+      final unit = input.codeUnitAt(index);
+      if (unit == 0x22 && !escaped) return index - offset + 1;
+      if (unit == 0x5C && !escaped) {
+        escaped = true;
+      } else {
+        escaped = false;
+      }
+    }
+    return 1;
   }
 }
 
