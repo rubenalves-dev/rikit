@@ -129,17 +129,16 @@ class _JsonCodeEditorState extends State<JsonCodeEditor> {
         final lines = text.split('\n');
         final lineCount = math.max(1, lines.length);
         final gutterWidth = 24.0 + lineCount.toString().length * 8;
-        final widestLine = lines.fold<double>(0, (width, line) {
-          final painter = TextPainter(
-            text: TextSpan(
-              text: line.isEmpty ? ' ' : line,
-              style: jsonCodeStyle,
-            ),
-            textDirection: TextDirection.ltr,
-            maxLines: 1,
-          )..layout();
-          return math.max(width, painter.width);
-        });
+        final glyphPainter = TextPainter(
+          text: const TextSpan(text: 'M', style: jsonCodeStyle),
+          textDirection: TextDirection.ltr,
+          maxLines: 1,
+        )..layout();
+        final widestLineLength = lines.fold<int>(
+          1,
+          (length, line) => math.max(length, line.runes.length),
+        );
+        final widestLine = widestLineLength * glyphPainter.width;
         final editorViewportWidth = math.max(
           0.0,
           constraints.maxWidth - gutterWidth,
@@ -174,36 +173,13 @@ class _JsonCodeEditorState extends State<JsonCodeEditor> {
                     key: const ValueKey('json-line-number-gutter'),
                     width: gutterWidth,
                     color: RikitColors.surfaceRaised.withValues(alpha: .55),
-                    child: Stack(
-                      children: [
-                        if (errorLine != null)
-                          Positioned(
-                            top: _verticalPadding + errorLine * _lineExtent,
-                            left: 0,
-                            right: 0,
-                            height: _lineExtent,
-                            child: Container(
-                              color: RikitColors.primary.withValues(alpha: .13),
-                            ),
-                          ),
-                        for (var index = 0; index < lineCount; index++)
-                          Positioned(
-                            top: _verticalPadding + index * _lineExtent,
-                            right: 9,
-                            child: Text(
-                              '${index + 1}',
-                              key: ValueKey('json-line-${index + 1}'),
-                              style: TextStyle(
-                                color: index == errorLine
-                                    ? RikitColors.primary
-                                    : RikitColors.textMuted,
-                                fontFamily: 'monospace',
-                                fontSize: 11,
-                                height: 13 / 11,
-                              ),
-                            ),
-                          ),
-                      ],
+                    child: CustomPaint(
+                      painter: _LineNumberGutterPainter(
+                        lineCount: lineCount,
+                        errorLine: errorLine,
+                        lineExtent: _lineExtent,
+                        verticalPadding: _verticalPadding,
+                      ),
                     ),
                   ),
                   Expanded(
@@ -274,5 +250,79 @@ class _JsonCodeEditorState extends State<JsonCodeEditor> {
         );
       },
     );
+  }
+}
+
+class _LineNumberGutterPainter extends CustomPainter {
+  const _LineNumberGutterPainter({
+    required this.lineCount,
+    required this.errorLine,
+    required this.lineExtent,
+    required this.verticalPadding,
+  });
+
+  final int lineCount;
+  final int? errorLine;
+  final double lineExtent;
+  final double verticalPadding;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final clip = canvas.getLocalClipBounds();
+    final firstVisible = math.max(
+      0,
+      ((clip.top - verticalPadding) / lineExtent).floor(),
+    );
+    final lastVisible = math.min(
+      lineCount - 1,
+      ((clip.bottom - verticalPadding) / lineExtent).ceil(),
+    );
+    if (lastVisible < firstVisible) return;
+
+    final error = errorLine;
+    if (error != null && error >= firstVisible && error <= lastVisible) {
+      canvas.drawRect(
+        Rect.fromLTWH(
+          0,
+          verticalPadding + error * lineExtent,
+          size.width,
+          lineExtent,
+        ),
+        Paint()..color = RikitColors.primary.withValues(alpha: .13),
+      );
+    }
+
+    for (var index = firstVisible; index <= lastVisible; index++) {
+      final painter = TextPainter(
+        text: TextSpan(
+          text: '${index + 1}',
+          style: TextStyle(
+            color: index == errorLine
+                ? RikitColors.primary
+                : RikitColors.textMuted,
+            fontFamily: 'monospace',
+            fontSize: 11,
+            height: 13 / 11,
+          ),
+        ),
+        textDirection: TextDirection.ltr,
+        maxLines: 1,
+      )..layout();
+      painter.paint(
+        canvas,
+        Offset(
+          size.width - painter.width - 9,
+          verticalPadding + index * lineExtent,
+        ),
+      );
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant _LineNumberGutterPainter oldDelegate) {
+    return lineCount != oldDelegate.lineCount ||
+        errorLine != oldDelegate.errorLine ||
+        lineExtent != oldDelegate.lineExtent ||
+        verticalPadding != oldDelegate.verticalPadding;
   }
 }
