@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:rikit/features/design_system/domain/design_system_state.dart';
 import 'package:rikit/features/design_system/presentation/controllers/design_system_controller.dart';
 import 'package:rikit/features/design_system/presentation/services/system_fonts_service.dart';
+import 'package:rikit/features/design_system/presentation/widgets/button_editor.dart';
 import 'package:rikit/features/design_system/presentation/widgets/color_scheme_editor.dart';
+import 'package:rikit/features/design_system/presentation/widgets/dropdown_editor.dart';
+import 'package:rikit/features/design_system/presentation/widgets/forms_editor.dart';
 import 'package:rikit/features/design_system/presentation/widgets/global_tokens_editor.dart';
 import 'package:rikit/features/design_system/presentation/widgets/typography_editor.dart';
 import 'package:rikit/shared/presentation/page_header.dart';
@@ -155,9 +158,9 @@ class _DesignSystemPageState extends State<DesignSystemPage> {
                                 controller: widget.controller,
                                 systemFonts: systemFonts,
                               ),
-                        const _JsonPagePlaceholder(title: 'Button'),
-                        const _JsonPagePlaceholder(title: 'Dropdown'),
-                        const _JsonPagePlaceholder(title: 'Forms'),
+                        ButtonEditor(controller: widget.controller),
+                        DropdownEditor(controller: widget.controller),
+                        FormsEditor(controller: widget.controller),
                         const _JsonPagePlaceholder(title: 'Details & Finish'),
                       ],
                     ),
