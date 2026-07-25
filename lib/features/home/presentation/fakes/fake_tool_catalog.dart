@@ -11,5 +11,12 @@ abstract final class FakeToolCatalog {
       route: AppRoutes.jsonFormatter,
       icon: Icons.data_object_rounded,
     ),
+    ToolCardDto(
+      name: 'Design System',
+      description:
+          'Create color palettes, global scales, typography settings, and export to CSS/JSON/YAML.',
+      route: AppRoutes.designSystem,
+      icon: Icons.palette_rounded,
+    ),
   ];
 }
